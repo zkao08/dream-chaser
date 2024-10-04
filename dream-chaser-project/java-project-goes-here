@@ -1,1 +1,25 @@
 
+Function writeStatisticsToJson(userID, statistics):
+    # Create a dictionary for the statistics.json file
+    statisticsData = {
+        "userID": userID,
+        "totalTimeSpent": statistics["totalTimeSpent"],
+        "totalTasks": statistics["totalTasks"],
+        "completedTasks": statistics["completedTasks"],
+        "completionPercentage": statistics["completionPercentage"]
+    }
+
+    # Write to Statistics.json
+    with open("Statistics.json", "w") as jsonFile:
+        json.dump(statisticsData, jsonFile)
+
+Function readStatisticsFromJson(userID):
+    # Open the Statistics.json file and read data
+    with open("Statistics.json", "r") as jsonFile:
+        data = json.load(jsonFile)
+    
+    # Check if the userID matches
+    If data["userID"] == userID:
+        Return data
+    Else:
+        Return None
