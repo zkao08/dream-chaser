@@ -1,11 +1,3 @@
-package GoalCreation;
-
-/**
- * The creation class will help create the goals that want to be 	
- * reached by the users. It represents a personal or project goal 	
- * with a title, descrption, deadline, and completion status. 
- */
-
 /* 
  * Start Class this way... for frontend pages?
 import javafx.scene.control.*;
@@ -20,6 +12,13 @@ public class HomePage extends GridPane {
 }
  */
 
+package GoalCreation;
+
+/**
+ * The creation class will help create the goals that want to be 	
+ * reached by the users. It represents a personal or project goal 	
+ * with a title, descrption, deadline, and completion status. 
+ */
 
 public class creation
 {
