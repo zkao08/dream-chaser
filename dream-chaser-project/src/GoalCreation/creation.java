@@ -5,6 +5,22 @@ package GoalCreation;
  * reached by the users. It represents a personal or project goal 	
  * with a title, descrption, deadline, and completion status. 
  */
+
+/* 
+ * Start Class this way... for frontend pages?
+import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
+
+public class HomePage extends GridPane {
+    private DreamChaserApp app;
+
+    public HomePage(DreamChaserApp app) {
+        this.app = app;
+    }
+}
+ */
+
+
 public class creation
 {
 	
