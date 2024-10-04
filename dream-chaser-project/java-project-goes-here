@@ -1,1 +1,46 @@
 
+Function calculateStatistics(userID):
+    # Fetch the user's goals and time logs from the database
+    goals = fetchGoals(userID)
+    timeLogs = fetchTimeLogs(userID)
+
+    totalTimeSpent = 0
+    totalTasksCompleted = 0
+    totalTasks = 0
+
+    # Loop through each goal to calculate statistics
+    For each goal in goals:
+        # Get the tasks associated with the goal
+        tasks = getTasks(goal)
+        totalTasks += len(tasks)
+
+        # Check completed tasks and accumulate time
+        For each task in tasks:
+            If task.isCompleted():
+                totalTasksCompleted += 1
+            
+            # Get the time logged for each task
+            totalTimeSpent += getTimeLogged(task)
+
+    # Calculate the percentage of tasks completed
+    completionPercentage = (totalTasksCompleted / totalTasks) * 100
+
+    # Create a statistics dictionary to store the data
+    statistics = {
+        "totalTimeSpent": totalTimeSpent,
+        "totalTasks": totalTasks,
+        "completedTasks": totalTasksCompleted,
+        "completionPercentage": completionPercentage
+    }
+
+    # Return the statistics for display
+    Return statistics
+
+Function displayStatistics(statistics):
+    # Display total time spent
+    print("Total Time Spent: " + formatTime(statistics["totalTimeSpent"]))
+
+    # Display task completion stats
+    print("Total Tasks: " + statistics["totalTasks"])
+    print("Completed Tasks: " + statistics["completedTasks"])
+    print("Completion Percentage: " + statistics["completionPercentage"] + "%")
