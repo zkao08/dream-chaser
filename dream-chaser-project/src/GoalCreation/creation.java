@@ -69,11 +69,6 @@ METHODS
     markComplete()
         this.isCompleted = true
 
-    //displays goal information
-    displayGoal()
-        PRINT "Goal: " + this.goalName
-        PRINT "Description: " + this.description
-        PRINT "Target Date: " + this.targetDate
-        PRINT "Completed: " + (this.isCompleted ? "Yes" : "No")
+    
         
         
