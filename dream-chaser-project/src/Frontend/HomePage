@@ -1,0 +1,48 @@
+import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
+
+public class HomePage extends GridPane {
+    private DreamChaserApp app;
+
+    public HomePage(DreamChaserApp app) {
+        this.app = app;
+
+        // Set up the layout
+        setPadding(new javafx.geometry.Insets(10));
+        setVgap(8);
+        setHgap(10);
+
+        // Create UI elements
+        Label goalLabel = new Label("Enter your goal:");
+        TextField goalInput = new TextField();
+        Label timeLabel = new Label("Estimated time (hours):");
+        TextField timeInput = new TextField();
+        Button submitButton = new Button("Submit");
+        Button statsButton = new Button("View Statistics");
+        Button settingsButton = new Button("Settings");
+        TextArea resultArea = new TextArea();
+        resultArea.setEditable(false);
+
+        // Layout positioning
+        add(goalLabel, 0, 0);
+        add(goalInput, 1, 0);
+        add(timeLabel, 0, 1);
+        add(timeInput, 1, 1);
+        add(submitButton, 1, 2);
+        add(statsButton, 0, 3);
+        add(settingsButton, 1, 3);
+        add(resultArea, 0, 4, 2, 1);
+
+        // Handle button actions
+        submitButton.setOnAction(e -> {
+            String goal = goalInput.getText();
+            String time = timeInput.getText();
+            resultArea.appendText("Goal: " + goal + ", Estimated Time: " + time + " hours\n");
+            goalInput.clear();
+            timeInput.clear();
+        });
+
+        statsButton.setOnAction(e -> app.showStatisticsPage());
+        settingsButton.setOnAction(e -> app.showSettingsPage());
+    }
+}
