@@ -1,8 +1,16 @@
-package Statistics;
+package Backend;
 
 // Import necessary libraries
 import java.util.List;
 
+/**
+ * Task.java
+ * Created By: Max Henson
+ * Date Created: 10/03/2024
+ * Version: 1.0
+ * Description: The Task class represents an individual task associated with a goal, 
+ * containing information such as the task name, completion status, and time spent on the task.
+ */
 // Task Model
 class Task {
     private String name;
@@ -42,7 +50,14 @@ class Task {
         this.timeSpent = timeSpent;
     }
 }
-
+/**
+ * Goal.java
+ * Created By: Max Henson
+ * Date Created: 10/03/2024
+ * Version: 1.0
+ * Description: The Goal class represents a user's goal, which includes an ID, 
+ * name, and a list of associated tasks.
+ */
 // Goal Model
 class Goal {
     private int goalID;
@@ -82,7 +97,14 @@ class Goal {
         this.tasks = tasks;
     }
 }
-
+/**
+ * Statistics.java
+ * Created By: Max Henson
+ * Date Created: 10/03/2024
+ * Version: 1.0
+ * Description: The Statistics class encapsulates the statistics related to a user's goals, 
+ * including total time spent, total tasks, completed tasks, and completion percentage.
+ */
 // Statistics Model
 class Statistics {
     private int totalTimeSpent;
@@ -132,7 +154,14 @@ class Statistics {
         this.completionPercentage = completionPercentage;
     }
 }
-
+/**
+ * StatisticsService.java
+ * Created By: Max Henson
+ * Date Created: 10/03/2024
+ * Version: 1.0
+ * Description: The StatisticsService class provides methods to fetch goals for a user 
+ * and calculate statistics based on the tasks associated with those goals.
+ */
 // Service class for fetching and calculating statistics
 public class StatisticsService {
 

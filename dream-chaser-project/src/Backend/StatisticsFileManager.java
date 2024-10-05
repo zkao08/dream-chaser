@@ -1,5 +1,27 @@
-// package Statistics.json;
-// StatisticsFileManager.java
+package Backend;
+
+/**
+ * StatisticsFileManager.java
+ * Created By: Max Henson
+ * Date Created: 10/03/2024
+ * Version: 1.0
+ * 
+ * Description: The StatisticsFileManager class handles the reading and writing of 
+ * user statistics to and from JSON files..
+ * 
+ * Usage:
+ * 1. Create an instance of StatisticsFileManager.
+ * 2. Use the writeStatisticsToJson(String userID, Statistics statistics) method 
+ *    to save a Statistics object to a JSON file.
+ * 3. Use the readStatisticsFromJson(String userID) method to retrieve a Statistics 
+ *    object from a JSON file.
+ * 
+ * Change Log:
+ * Version 1.0 (10/03/2024):
+ * - Initial implementation with methods to write and read statistics from JSON files.
+ * - Placeholder methods for JSON conversion and file I/O operations.
+ */
+
 
 // Import necessary libraries
 import java.io.File;

@@ -1,31 +1,32 @@
-/* 
- * Start Class this way... for frontend pages?
-import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
-
-public class HomePage extends GridPane {
-    private DreamChaserApp app;
-
-    public HomePage(DreamChaserApp app) {
-        this.app = app;
-    }
-}
- */
-
-package GoalCreation;
+package Frontend;
 
 /**
- * The creation class will help create the goals that want to be 	
- * reached by the users. It represents a personal or project goal 	
- * with a title, descrption, deadline, and completion status. 
+ * CreateAccountPage.java
+ * Created By: Venus Ubani and Mai-Lisa Atis
+ * Date Created: 10/02/2024
+ * Version: 1.0
+ * Description: The CreateAccountPage class provides a user interface for creating 
+ * a new user account in the Dream Chaser goal tracking application. It includes fields 
+ * for user input such as username, password, and email address.
+ * 
+ * Usage:
+ * - Instantiate the CreateAccountPage class to create a new page for account creation.
+ * 
+ * Changelog:
+ * - Version 1.0: Initial version with a basic structure for creating user accounts.
  */
 
-public class creation
-{
-	
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+public class GoalCreationPage extends Stage {
+    //code here
 }
 
-//Pseudocode
+/*
+ * //Pseudocode
 Class creation
 
 ATTRIBUTES
@@ -72,3 +73,5 @@ METHODS
     
         
         
+ * 
+ */

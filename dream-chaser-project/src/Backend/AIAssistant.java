@@ -1,12 +1,21 @@
-package AI;
+package Backend;
+
 
 /**
- * The AI Assistant class will integrate genAI API to provide the user
- * with assistance in creating and managing goals
+ * The AIAssistant class integrates with a generative AI API to provide users 
+ * with assistance in creating and managing goals.
  * 
- * @author Zachary Kao
- * @version 1.0
- * @since 10/4/2024
+ * Author: Zachary Kao
+ * Version: 1.0
+ * Since: 10/04/2024
+ * 
+ * Usage:
+ * This class allows users to leverage AI capabilities 
+ * for estimating task durations and generating task lists from goals.
+ * 
+ * Change Log:
+ * Version 1.0 (10/04/2024):
+ * - Initial creation of the AIAssistant class.
  */
 public class AIAssistant
 {
