@@ -1,0 +1,39 @@
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+
+public class DreamChaserApp extends Application {
+    private StackPane mainLayout;
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+    @Override
+    public void start(Stage primaryStage) {
+        primaryStage.setTitle("Dream Chaser - Goal Tracking Application");
+
+        mainLayout = new StackPane();
+        Scene scene = new Scene(mainLayout, 600, 400);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+
+        showHomePage(); // Show the home page first
+    }
+
+    public void showHomePage() {
+        HomePage homePage = new HomePage(this);
+        mainLayout.getChildren().setAll(homePage);
+    }
+
+    public void showStatisticsPage() {
+        StatisticsPage statisticsPage = new StatisticsPage(this);
+        mainLayout.getChildren().setAll(statisticsPage);
+    }
+
+    public void showSettingsPage() {
+        SettingsPage settingsPage = new SettingsPage(this);
+        mainLayout.getChildren().setAll(settingsPage);
+    }
+}
