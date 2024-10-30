@@ -2,209 +2,136 @@ package Backend;
 
 // Import necessary libraries
 import java.util.List;
+import org.json.JSONObject;
 
 /**
- * Task.java
- * Created By: Max Henson
- * Date Created: 10/03/2024
- * Version: 1.0
- * Description: The Task class represents an individual task associated with a goal, 
- * containing information such as the task name, completion status, and time spent on the task.
+ * StatisticsService.java 
+ * Created By: Max Henson 
+ * Date Created: 10/03/2024 Version: 1.0
+ *
+ * Description: Service class responsible for managing statistics logic and updating user statistics.
+ * It uses StatisticsFileManager for reading and writing statistics and provides
+ * user-facing functionality. 
+ *
+ * Usage: Undetermined
+ *
+ * Change Log: 
+ * Version 1.0 (10/03/2024): Created placeholder functions for setters, getters, etc
+ * Version 1.1 (10/30/2024): - Placeholders replaced with methods - Implemented new methods such as
+ * saveStatistics, displayStatistics, updateStatistics, and addTask - Currently trying to implement
+ * org.json library for json file
  */
-// Task Model
-class Task {
-    private String name;
-    private boolean isCompleted;
-    private int timeSpent;
 
-    // Constructor
-    public Task(String name, boolean isCompleted, int timeSpent) {
-        this.name = name;
-        this.isCompleted = isCompleted;
-        this.timeSpent = timeSpent;
-    }
-
-    // Getters
-    public String getName() {
-        return name;
-    }
-
-    public boolean isCompleted() {
-        return isCompleted;
-    }
-
-    public int getTimeSpent() {
-        return timeSpent;
-    }
-
-    // Setters
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setCompleted(boolean isCompleted) {
-        this.isCompleted = isCompleted;
-    }
-
-    public void setTimeSpent(int timeSpent) {
-        this.timeSpent = timeSpent;
-    }
-}
 /**
- * Goal.java
- * Created By: Max Henson
- * Date Created: 10/03/2024
- * Version: 1.0
- * Description: The Goal class represents a user's goal, which includes an ID, 
- * name, and a list of associated tasks.
+ * Service class responsible for managing statistics logic. It uses
+ * StatisticsFileManager for reading and writing statistics and provides
+ * user-facing functionality.
  */
-// Goal Model
-class Goal {
-    private int goalID;
-    private String name;
-    private List<Task> tasks;
-
-    // Constructor
-    public Goal(int goalID, String name, List<Task> tasks) {
-        this.goalID = goalID;
-        this.name = name;
-        this.tasks = tasks;
-    }
-
-    // Getters
-    public int getGoalID() {
-        return goalID;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public List<Task> getTasks() {
-        return tasks;
-    }
-
-    // Setters
-    public void setGoalID(int goalID) {
-        this.goalID = goalID;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setTasks(List<Task> tasks) {
-        this.tasks = tasks;
-    }
-}
-/**
- * Statistics.java
- * Created By: Max Henson
- * Date Created: 10/03/2024
- * Version: 1.0
- * Description: The Statistics class encapsulates the statistics related to a user's goals, 
- * including total time spent, total tasks, completed tasks, and completion percentage.
- */
-// Statistics Model
-class Statistics {
-    private int totalTimeSpent;
-    private int totalTasks;
-    private int completedTasks;
-    private double completionPercentage;
-
-    // Constructor
-    public Statistics(int totalTimeSpent, int totalTasks, int completedTasks, double completionPercentage) {
-        this.totalTimeSpent = totalTimeSpent;
-        this.totalTasks = totalTasks;
-        this.completedTasks = completedTasks;
-        this.completionPercentage = completionPercentage;
-    }
-
-    // Getters
-    public int getTotalTimeSpent() {
-        return totalTimeSpent;
-    }
-
-    public int getTotalTasks() {
-        return totalTasks;
-    }
-
-    public int getCompletedTasks() {
-        return completedTasks;
-    }
-
-    public double getCompletionPercentage() {
-        return completionPercentage;
-    }
-
-    // Setters
-    public void setTotalTimeSpent(int totalTimeSpent) {
-        this.totalTimeSpent = totalTimeSpent;
-    }
-
-    public void setTotalTasks(int totalTasks) {
-        this.totalTasks = totalTasks;
-    }
-
-    public void setCompletedTasks(int completedTasks) {
-        this.completedTasks = completedTasks;
-    }
-
-    public void setCompletionPercentage(double completionPercentage) {
-        this.completionPercentage = completionPercentage;
-    }
-}
-/**
- * StatisticsService.java
- * Created By: Max Henson
- * Date Created: 10/03/2024
- * Version: 1.0
- * Description: The StatisticsService class provides methods to fetch goals for a user 
- * and calculate statistics based on the tasks associated with those goals.
- */
-// Service class for fetching and calculating statistics
 public class StatisticsService {
 
-    // Simulate fetching goals for a user (to be replaced with database logic)
-    public List<Goal> fetchGoalsFromDatabase(String userID) {
-        // Simulate goals for demonstration purposes
-        return mockGoalsForUser(userID);
+    /**
+     * Saves user statistics after calculating the completion percentage. This
+     * method handles logic for calculating the completion percentage and
+     * ensures statistics are stored correctly.
+     *
+     * @param username The username of the user.
+     * @param totalTimeSpent Total time spent by the user.
+     * @param totalTasks Total number of tasks the user has.
+     * @param completedTasks Number of tasks completed by the user.
+     */
+    public static void saveStatistics(String username, int totalTimeSpent, int totalTasks, int completedTasks) {
+        // Calculate the completion percentage (ensure it's valid based on tasks)
+        double completionPercentage = (totalTasks > 0) ? ((double) completedTasks / totalTasks) * 100 : 0.0;
+
+        // Save the statistics using the FileManager
+        StatisticsFileManager.saveUserStatistics(username, totalTimeSpent, totalTasks, completedTasks, completionPercentage);
     }
 
-    // Method to calculate statistics for a user based on goals
-    public Statistics calculateStatistics(String userID) {
-        List<Goal> goals = fetchGoalsFromDatabase(userID);
-        int totalTimeSpent = 0;
-        int totalTasksCompleted = 0;
-        int totalTasks = 0;
+    /**
+     * !!!!!!!!!!!!!!!!!!!!!!!!!!! WILL MOST LIKELY BE REPLACED BY FRONT-END !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+     * Retrieves user statistics and formats them for display. This method is
+     * designed to return statistics in a user-friendly format.
+     * 
+     * @param username The username of the user.
+     * @return A formatted string of the user's statistics, or an error message
+     * if not found.
+     */
+    public static String displayStatistics(String username) {
+        // Retrieve the user's statistics from the file
+        JSONObject userStats = StatisticsFileManager.getUserStatistics(username);
 
-        // Loop through each goal and its tasks
-        for (Goal goal : goals) {
-            List<Task> tasks = goal.getTasks();
-            totalTasks += tasks.size();
-
-            for (Task task : tasks) {
-                if (task.isCompleted()) {
-                    totalTasksCompleted++;
-                }
-                totalTimeSpent += task.getTimeSpent();
-            }
+        // If the user data is found, format it for display
+        if (userStats != null) {
+            return String.format(
+                    "User: %s\n"
+                    + "Total Time Spent: %d hours\n"
+                    + "Total Tasks: %d\n"
+                    + "Completed Tasks: %d\n"
+                    + "Completion Percentage: %.2f%%\n"
+                    + "Last Updated: %s\n",
+                    username,
+                    userStats.getInt("totalTimeSpent"),
+                    userStats.getInt("totalTasks"),
+                    userStats.getInt("completedTasks"),
+                    userStats.getDouble("completionPercentage"),
+                    userStats.getString("lastUpdated")
+            );
+        } else {
+            return "User statistics not found.";
         }
-
-        // Calculate completion percentage
-        double completionPercentage = (totalTasks > 0) ? ((double) totalTasksCompleted / totalTasks) * 100 : 0.0;
-
-        // Return the calculated statistics
-        return new Statistics(totalTimeSpent, totalTasks, totalTasksCompleted, completionPercentage);
     }
 
-    // Placeholder to simulate goal data (to be replaced with actual database retrieval later)
-    private List<Goal> mockGoalsForUser(String userID) {
-        // Mock goals and tasks for testing purposes
-        return List.of(new Goal(1, "Example Goal 1", List.of(
-                new Task("Task 1", true, 2),
-                new Task("Task 2", false, 3))),
-                new Goal(2, "Example Goal 2", List.of(
-                new Task("Task 1", true, 5))));
+    /**
+     * Updates the statistics for a user by adding time and task information.
+     * This method is used when a user adds more time or completes a task.
+     *
+     * @param username The username of the user.
+     * @param additionalTime The time to add to the user's total.
+     * @param tasksCompleted The additional tasks the user completed.
+     */
+    public static void updateStatistics(String username, int additionalTime, int tasksCompleted) {
+        // Retrieve the existing statistics for the user
+        JSONObject userStats = StatisticsFileManager.getUserStatistics(username);
+
+        if (userStats != null) {
+            // Get the current statistics values
+            int totalTimeSpent = userStats.getInt("totalTimeSpent") + additionalTime;
+            int totalTasks = userStats.getInt("totalTasks");
+            int completedTasks = userStats.getInt("completedTasks") + tasksCompleted;
+
+            // Recalculate completion percentage
+            double completionPercentage = (totalTasks > 0) ? ((double) completedTasks / totalTasks) * 100 : 0.0;
+
+            // Save the updated statistics
+            StatisticsFileManager.saveUserStatistics(username, totalTimeSpent, totalTasks, completedTasks, completionPercentage);
+        } else {
+            System.out.println("User not found: " + username);
+        }
+    }
+
+    /**
+     * Increment the number of total tasks for a user. This method is used when
+     * a new task is added for the user.
+     *
+     * @param username The username of the user.
+     */
+    public static void addTask(String username) {
+        // Retrieve the existing statistics for the user
+        JSONObject userStats = StatisticsFileManager.getUserStatistics(username);
+
+        if (userStats != null) {
+            // Increment the total tasks
+            int totalTasks = userStats.getInt("totalTasks") + 1;
+            int totalTimeSpent = userStats.getInt("totalTimeSpent");
+            int completedTasks = userStats.getInt("completedTasks");
+
+            // Recalculate completion percentage
+            double completionPercentage = (totalTasks > 0) ? ((double) completedTasks / totalTasks) * 100 : 0.0;
+
+            // Save the updated statistics
+            StatisticsFileManager.saveUserStatistics(username, totalTimeSpent, totalTasks, completedTasks, completionPercentage);
+        } else {
+            System.out.println("User not found: " + username);
+        }
     }
 }
