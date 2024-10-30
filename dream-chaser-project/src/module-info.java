@@ -4,6 +4,6 @@
 /**
  * 
  */
-module DreamChaser
-{
+module YourModuleName {
+    requires java.desktop;
 }
