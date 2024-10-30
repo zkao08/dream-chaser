@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Properties;
+import java.time.LocalDate;
 
 /**
  * The AIAssistant class integrates with a generative AI API to provide users 
@@ -106,14 +107,19 @@ public class AIAssistant
 
        int end = response.indexOf("\"", start);
 
-       return response.substring(start, end);
+       String extractedMessage = response.substring(start, end);
+       
+       return extractedMessage.replace("\\n", "\n");
 
    }
 
    public static void main(String[] args)
    {
 	   AIAssistant.loadEnvFile(".env");
-       System.out.println(chatGPT("hello, how are you? Can you tell me what's a Fibonacci Number?"));
+       System.out.println(chatGPT("Give me a list of tasks to break down the goal 'Learn to code in Java' by '2024-12-31' "
+       							+ "starting " + LocalDate.now() + " into smaller achievable tasks. "
+       							+ "Format the output in a csv as follows, which each task on a new line: 'task name, task description, task due date' "
+       							+ "The dates should be in java.time.LocalDate format and the csv should not be numbered and the first line should be the format specification."));
 
    }
 	
