@@ -1,0 +1,45 @@
+# Dream Chaser
+
+Dream Chaser is a goal tracking application designed to help users create, manage, and track their goals and tasks effectively. The app provides functionalities to define goals, add tasks, monitor progress, and check if goals are overdue.
+
+## Table of Contents
+
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Features
+
+- Create and manage goals with titles and descriptions.
+- Add tasks to each goal with due dates.
+- Track progress as a percentage based on completed tasks.
+- Mark tasks as completed.
+- Check if goals are overdue.
+- User-friendly console output for goal and task details.
+
+## Technologies Used
+
+- Java SE (Standard Edition)
+- JavaFX (GUI)
+- JDK (Java Development Kit)
+- IDE (Eclipse and Visual Studio Code)
+
+## Installation
+
+1. **Clone the repository:**
+
+   ```bash
+   git clone https://github.com/zkao08/dream-chaser.git
+
+# How to run frontend in a terminal
+
+1. Ensure you have the jdk files installed and directed to the correct file path in your folder.
+2. Build the DreamChaserApp
+    - cd into the dreamchaser directory: cd /path/to/dream-chaser-project
+    - cd into src: cd src
+    - Compile all files in the Frontend directory:javac Frontend/*.java
+    - Run the application: java Frontend.DreamChaserApp
+    NOTE: Always re-compile when you make changes to the code
