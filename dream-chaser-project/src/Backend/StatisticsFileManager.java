@@ -1,5 +1,5 @@
 package Backend;
-// test commit
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.IOException;
@@ -40,7 +40,7 @@ public class StatisticsFileManager {
      */
     private static ObjectNode createDefaultStatistics(String username) {
         // Create a new ObjectNode for storing default statistics
-        ObjectNode defaultStats = jsonUtils.objectMapper.createObjectNode();
+        ObjectNode defaultStats = JsonUtils.objectMapper.createObjectNode();
         defaultStats.put("totalTimeSpent", 0);
         defaultStats.put("totalTasks", 0);
         defaultStats.put("completedTasks", 0);
@@ -70,7 +70,7 @@ public class StatisticsFileManager {
             }
 
             // Create a new ObjectNode to store the user's statistics
-            ObjectNode userStats = jsonUtils.objectMapper.createObjectNode();
+            ObjectNode userStats = JsonUtils.objectMapper.createObjectNode();
             userStats.put("totalTimeSpent", totalTimeSpent);
             userStats.put("totalTasks", totalTasks);
             userStats.put("completedTasks", completedTasks);
@@ -80,7 +80,7 @@ public class StatisticsFileManager {
             userStats.put("lastUpdated", java.time.LocalDateTime.now().toString());
 
             // Update the JSON file with the user's statistics
-            jsonUtils.updateUserData(username, userStats);
+            JsonUtils.updateUserData(username, userStats);
 
             logger.info("User statistics saved successfully for user: " + username);
 
@@ -102,13 +102,13 @@ public class StatisticsFileManager {
     public static JsonNode getUserStatistics(String username) {
         try {
             // Retrieve the user's statistics from the JSON file
-            JsonNode userStats = jsonUtils.getUserData(username);
+            JsonNode userStats = JsonUtils.getUserData(username);
 
             // If the user doesn't exist, automatically create a new entry with default statistics
             if (userStats == null) {
                 logger.info("User not found, creating a new entry for user: " + username);
                 ObjectNode defaultStats = createDefaultStatistics(username);
-                jsonUtils.updateUserData(username, defaultStats);
+                JsonUtils.updateUserData(username, defaultStats);
                 return defaultStats;  // Return the newly created default stats
             }
 
@@ -119,4 +119,4 @@ public class StatisticsFileManager {
             return null;
         }
     }
-//dummy commit 3
+}
