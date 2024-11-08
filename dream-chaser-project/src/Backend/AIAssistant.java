@@ -192,8 +192,10 @@ public class AIAssistant
 		String response = chatGPT("Give me a list of tasks to break down the goal '" + goal.getGoalName() + "' "
 				+ "starting " + LocalDate.now() + " into smaller achievable tasks. "
 				+ "Format the output in a csv as follows, which each task on a new line: 'task name, hours to complete task, minutes to complete task' "
-				+ "The hours and minutes should add up to the total time estimated to complete the task "
-				+ "and the csv should not be numbered and the first line should be the format specification.");
+				+ "The hours and minutes should add up to the total time estimated to complete the task. "
+				+ "The tasks should not be numbered and the first line should be the format specification. "
+				+ "The tasks should be simple, achievable through self-study, and should not require professional instruction, public performance, or additional resources. "
+				+ "Ensure task names are short, simple, and do not contain commas or special punctuation.");
 		
 		//parse the response into a list of tasks
 		List<Task> tasks = new ArrayList<Task>();
