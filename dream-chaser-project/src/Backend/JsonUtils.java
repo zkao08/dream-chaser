@@ -1,10 +1,9 @@
 package Backend;
-
-// github commit comment lol
-import org.json.JSONObject;
-import org.json.JSONTokener;
-import java.io.FileReader;
-import java.io.FileWriter;
+//dummycommit 2
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;
 
@@ -17,93 +16,94 @@ import java.util.logging.Logger;
  * Description: Utility class for handling JSON read/write operations. This
  * class abstracts all interactions with the users.json file using `org.json`.
  *
- * Usage: Undetermined
+ * Usage:
  *
- * Change Log: 
- * Version 1.0 (10/30/2024): ?
- * Version 1.1 (10/30/2024): Updated code, moved file into Backend folder
+ * Change Log: Version 1.0 (10/30/2024): - Updated code, moved it into Backend folder
  */
 
-/**
- * 
- */
-public class jsonUtils {
+ /**
+  * Utility class for handling JSON read/write operations.
+  * This class abstracts all interactions with the users.Json file.
+  */
+ public class JsonUtils {
 
-    private static final String FILE_PATH = "users.json";  // Path to the JSON file
-    private static final Logger logger = Logger.getLogger(jsonUtils.class.getName());  // Logger for logging errors and info
+     // Constants for file paths and logger
+     private static final String FILE_PATH = "users.Json";  // Main JSON file where user data is stored
+     private static final Logger logger = Logger.getLogger(JsonUtils.class.getName());  // Logger for logging errors and info
+     public static ObjectMapper objectMapper = new ObjectMapper();  // ObjectMapper to handle JSON operations
 
-    /**
-     * Reads the JSON data from users.json file and returns it as a JSONObject.
-     * This method handles reading from the file and ensuring that the file
-     * exists.
-     *
-     * @return JSONObject containing all user data, or an empty object if the
-     * file does not exist.
-     * @throws IOException if there's an issue reading the file.
-     */
-    public static JSONObject readJsonFile() throws IOException {
-        try (FileReader reader = new FileReader(FILE_PATH)) {
-            // Read the JSON content using JSONTokener
-            return new JSONObject(new JSONTokener(reader));
-        } catch (IOException e) {
-            logger.warning("JSON file not found, creating a new empty users.json file.");
-            return new JSONObject();  // Return an empty JSONObject if file doesn't exist
-        }
-    }
+     /**
+      * Reads the JSON data from users.Json file and returns it as a JsonNode.
+      * This method handles reading from the file and ensuring that the file exists.
+      * @return JsonNode containing all user data, or an empty object if the file does not exist.
+      * @throws IOException if there's an issue reading the file.
+      */
+     public static JsonNode readJsonFile() throws IOException {
+         File file = new File(FILE_PATH);
 
-    /**
-     * Writes the given JSONObject to the users.json file. This method ensures
-     * that the JSON is pretty-printed (formatted for readability).
-     *
-     * @param jsonData The JSONObject data to write.
-     * @throws IOException if there's an issue writing to the file.
-     */
-    public static void writeJsonFile(JSONObject jsonData) throws IOException {
-        try (FileWriter file = new FileWriter(FILE_PATH)) {
-            file.write(jsonData.toString(4));  // Pretty print with 4-space indentation
-            logger.info("JSON data successfully written to " + FILE_PATH);
-        }
-    }
+         // Check if the JSON file exists, and create an empty one if it doesn't
+         if (!file.exists()) {
+             logger.warning("JSON file not found, creating a new empty users.Json file.");
+             file.createNewFile();  // Create an empty file
+             objectMapper.writeValue(file, objectMapper.createObjectNode());  // Write an empty JSON object to the new file
+         }
 
-    /**
-     * Updates a specific user's data in the JSON file. If the user does not
-     * exist, their data is added. If they do exist, their data is updated.
-     *
-     * @param username The key (username) to update in the JSON.
-     * @param userData The user's statistics data as a JSONObject.
-     * @throws IOException if there's an issue reading or writing the file.
-     */
-    public static void updateUserData(String username, JSONObject userData) throws IOException {
-        // Read the current JSON file content
-        JSONObject allUsersData = readJsonFile();
+         // Read and return the content of the file as a JsonNode
+         return objectMapper.readTree(file);
+     }
 
-        // Update or add the user data
-        allUsersData.put(username, userData);
+     /**
+      * Writes the given JsonNode to the users.Json file.
+      * This method ensures that the JSON is pretty-printed (formatted for readability).
+      * @param jsonNode The JsonNode data to write.
+      * @throws IOException if there's an issue writing to the file.
+      */
+     public static void writeJsonFile(JsonNode jsonNode) throws IOException {
+         File file = new File(FILE_PATH);
 
-        // Write the updated JSON data back to the file
-        writeJsonFile(allUsersData);
-        logger.info("Updated statistics for user: " + username);
-    }
+         // Write the updated JSON data to the file with pretty-print formatting for readability
+         objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, jsonNode);
+         logger.info("JSON data successfully written to " + FILE_PATH);
+     }
 
-    /**
-     * Retrieves a specific user's data from the JSON file.
-     *
-     * @param username The username of the user whose data to retrieve.
-     * @return The user's statistics data as a JSONObject, or null if the user
-     * doesn't exist.
-     * @throws IOException if there's an issue reading the file.
-     */
-    public static JSONObject getUserData(String username) throws IOException {
-        // Read the JSON data from the file
-        JSONObject allUsersData = readJsonFile();
+     /**
+      * Updates a specific user's data in the JSON file.
+      * If the user does not exist, their data is added. If they do exist, their data is updated.
+      * @param username The key (username) to update in the JSON.
+      * @param userData The user's statistics data as a JsonNode.
+      * @throws IOException if there's an issue reading or writing the file.
+      */
+     public static void updateUserData(String username, JsonNode userData) throws IOException {
+         // Read the current JSON file content
+         JsonNode rootNode = readJsonFile();
 
-        // Return the user's data if found, else return null
-        if (allUsersData.has(username)) {
-            logger.info("User found: " + username);
-            return allUsersData.getJSONObject(username);
-        } else {
-            logger.info("User not found: " + username);
-            return null;
-        }
-    }
-}   // End of public class jsonUtils
+         // Cast rootNode as an ObjectNode to allow modification (ObjectNode allows adding/updating fields)
+         if (rootNode.isObject()) {
+             ((ObjectNode) rootNode).set(username, userData);  // Update or add the user data
+         }
+
+         // Write the updated JSON data back to the file
+         writeJsonFile(rootNode);
+         logger.info("Updated statistics for user: " + username);
+     }
+
+     /**
+      * Retrieves a specific user's data from the JSON file.
+      * @param username The username of the user whose data to retrieve.
+      * @return The user's statistics data as a JsonNode, or null if the user doesn't exist.
+      * @throws IOException if there's an issue reading the file.
+      */
+     public static JsonNode getUserData(String username) throws IOException {
+         // Read the JSON data from the file
+         JsonNode rootNode = readJsonFile();
+
+         // Return the user's data if found, else return null
+         if (rootNode.has(username)) {
+             logger.info("User found: " + username);
+             return rootNode.get(username);
+         } else {
+             logger.info("User not found: " + username);
+             return null;
+         }
+     }
+ }
