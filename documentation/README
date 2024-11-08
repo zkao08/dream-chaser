@@ -34,3 +34,12 @@ Dream Chaser is a goal tracking application designed to help users create, manag
    ```bash
    git clone https://github.com/zkao08/dream-chaser.git
 
+# How to run frontend in a terminal
+
+1. Ensure you have the jdk files installed and directed to the correct file path in your folder.
+2. Build the DreamChaserApp
+    - cd into the dreamchaser directory: cd /path/to/dream-chaser-project
+    - cd into src: cd src
+    - Compile all files in the Frontend directory:javac Frontend/*.java
+    - Run the application: java Frontend.DreamChaserApp
+    NOTE: Always re-compile when you make changes to the code

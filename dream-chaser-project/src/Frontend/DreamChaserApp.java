@@ -1,58 +1,39 @@
 package Frontend;
 
-/*DreamChaserApp.java
- * Created By: Anointiyae Beasley
- * Date Created: 10/02/2024
- * Version: 1.0
- * Description: This JavaFX application is the main entry point for the Dream Chaser goal tracking application. 
- * It manages the primary window and navigation between various pages.  
- * 
- * Usage:
- * - Compile and run the application using JavaFX.
- * - Ensure that all dependent pages (HomePage, StatisticsPage, SettingsPage) are implemented.
- * 
-* Changelog:
- * - Version 1.0: Initial version with basic navigation structure and home page display.
- */
+import java.awt.*;
+import javax.swing.*;
 
+public class DreamChaserApp extends JFrame {
+    public DreamChaserApp() {
+        setTitle("Dream Chaser");
+        setSize(800, 600);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
 
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
+        JPanel mainPanel = new JPanel(new CardLayout());
+        CardLayout cardLayout = (CardLayout) mainPanel.getLayout();
 
-public class DreamChaserApp extends Application {
-    private StackPane mainLayout;
+        // Add each screen to the main panel
+        mainPanel.add(new ProgressReportScreen(cardLayout, mainPanel), "ProgressReport");
+        mainPanel.add(new AddTimeScreen(cardLayout, mainPanel), "AddTime");
+        mainPanel.add(new GoalCreationScreen(cardLayout , mainPanel), "GoalCreation");
+        mainPanel.add(new SignInScreen(cardLayout, mainPanel), "SignIn");
+        mainPanel.add(new SignUpScreen(cardLayout, mainPanel), "SignUp");
+        mainPanel.add(new LoadingScreen(), "Loading"); // Add Loading Screen
+        mainPanel.add(new StatisticsScreen(cardLayout, mainPanel), "Statistics");
+
+         // Show the Sign In screen at startup
+         cardLayout.show(mainPanel, "SignIn");
+
+         add(mainPanel, BorderLayout.CENTER);
+    }
+
 
     public static void main(String[] args) {
-        launch(args);
-    }
-
-    @Override
-    public void start(Stage primaryStage) {
-        primaryStage.setTitle("Dream Chaser - Goal Tracking Application");
-
-        mainLayout = new StackPane();
-        Scene scene = new Scene(mainLayout, 600, 400);
-        primaryStage.setScene(scene);
-        primaryStage.show();
-
-        showHomePage(); // Show the home page first
-    }
-
-    public void showHomePage() {
-        break;
-    }
-
-    public void showStatisticsPage() {
-        break;
-    }
-
-    public void showStudySessionPage() {
-        break;
-    }
-
-    public void showGoalCreationPage() {
-        break;
+        SwingUtilities.invokeLater(() -> {
+            DreamChaserApp app = new DreamChaserApp();
+            app.setVisible(true);
+        });
     }
 }
+

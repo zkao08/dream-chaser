@@ -1,4 +1,3 @@
-
 package Frontend;
 /**
  * Frontend Package
@@ -8,9 +7,3 @@ package Frontend;
  * 
  */
 
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.control.ProgressIndicator;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-import javafx.scene.layout.GridPane;

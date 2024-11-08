@@ -1,88 +1,122 @@
 package Backend;
 
-/**
- * StatisticsFileManager.java
- * Created By: Max Henson
- * Date Created: 10/03/2024
- * Version: 1.0
- * 
- * Description: The StatisticsFileManager class handles the reading and writing of 
- * user statistics to and from JSON files..
- * 
- * Usage:
- * 1. Create an instance of StatisticsFileManager.
- * 2. Use the writeStatisticsToJson(String userID, Statistics statistics) method 
- *    to save a Statistics object to a JSON file.
- * 3. Use the readStatisticsFromJson(String userID) method to retrieve a Statistics 
- *    object from a JSON file.
- * 
- * Change Log:
- * Version 1.0 (10/03/2024):
- * - Initial implementation with methods to write and read statistics from JSON files.
- * - Placeholder methods for JSON conversion and file I/O operations.
- */
-
-
-// Import necessary libraries
-import java.io.File;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.IOException;
+import java.util.logging.Logger;
 
-class StatisticsFileManager {
+/**
+ * StatisticsFileManager.java Created By: Max Henson Date Created: 10/03/2024
+ * Version: 1.0
+ *
+ * Description: The StatisticsFileManager class handles the reading and writing
+ * of user statistics to and from JSON files..
+ *
+ * Usage: 1. Create an instance of StatisticsFileManager. 2. Use the
+ * writeStatisticsToJson(String userID, Statistics statistics) method to save a
+ * Statistics object to a JSON file. 3. Use the readStatisticsFromJson(String
+ * userID) method to retrieve a Statistics object from a JSON file.
+ *
+ * Change Log: Version 1.0 (10/03/2024): - Initial implementation with methods
+ * to write and read statistics from JSON files. - Placeholder methods for JSON
+ * conversion and file I/O operations. Version 1.1 (10/30/2024): - Overhaul of
+ * code - Placeholders replaced with methods - Updated implementation of reading
+ * and writing methods
+ */
+/**
+ * Manages the reading and writing of user statistics to and from the JSON file.
+ * This class interacts with jsonUtils for JSON operations and handles input
+ * validation and logging.
+ */
+public class StatisticsFileManager {
 
-    // Method to write statistics to a JSON file
-    public void writeStatisticsToJson(String userID, Statistics statistics) {
-        // Open or create a file named "Statistics_<userID>.json"
-        File file = new File("Statistics_" + userID + ".json");
+    private static final Logger logger = Logger.getLogger(StatisticsFileManager.class.getName());  // Logger for error and info handling
 
-        // Convert the statistics object into JSON format
-        String jsonString = convertStatisticsToJson(statistics);
+    /**
+     * Creates default statistics for a new user in the system.
+     *
+     * @param username The username for which to create the default statistics.
+     * @return ObjectNode containing default user statistics.
+     */
+    private static ObjectNode createDefaultStatistics(String username) {
+        // Create a new ObjectNode for storing default statistics
+        ObjectNode defaultStats = JsonUtils.objectMapper.createObjectNode();
+        defaultStats.put("totalTimeSpent", 0);
+        defaultStats.put("totalTasks", 0);
+        defaultStats.put("completedTasks", 0);
+        defaultStats.put("completionPercentage", 0.0);
+        defaultStats.put("lastUpdated", java.time.LocalDateTime.now().toString());
 
-        // Write the JSON string to the file (in actual implementation, handle I/O exceptions)
-        writeFile(file, jsonString);
+        logger.info("Created default statistics for new user: " + username);
+        return defaultStats;
     }
 
-    // Method to read statistics from a JSON file
-    public Statistics readStatisticsFromJson(String userID) {
-        // Open the file named "Statistics_<userID>.json"
-        File file = new File("Statistics_" + userID + ".json");
+    /**
+     * Saves a user's statistics data to the JSON file. If the user already
+     * exists, their data is updated. Otherwise, a new entry is created. This
+     * method includes input validation to ensure data integrity.
+     *
+     * @param username The username of the user.
+     * @param totalTimeSpent The total time spent by the user.
+     * @param totalTasks The total number of tasks the user has.
+     * @param completedTasks The number of tasks completed by the user.
+     * @param completionPercentage The percentage of tasks completed.
+     */
+    public static void saveUserStatistics(String username, int totalTimeSpent, int totalTasks, int completedTasks, double completionPercentage) {
+        try {
+            // Input validation to ensure valid statistics data
+            if (totalTimeSpent < 0 || totalTasks < 0 || completedTasks < 0 || completedTasks > totalTasks || completionPercentage < 0 || completionPercentage > 100) {
+                throw new IllegalArgumentException("Invalid statistics data provided for user: " + username);
+            }
 
-        // Check if the file exists
-        if (file.exists()) {
-            // Read the content from the file
-            String jsonContent = readFile(file);
+            // Create a new ObjectNode to store the user's statistics
+            ObjectNode userStats = JsonUtils.objectMapper.createObjectNode();
+            userStats.put("totalTimeSpent", totalTimeSpent);
+            userStats.put("totalTasks", totalTasks);
+            userStats.put("completedTasks", completedTasks);
+            userStats.put("completionPercentage", completionPercentage);
 
-            // Convert the JSON content back into a Statistics object
-            return convertJsonToStatistics(jsonContent);
-        } else {
-            // If the file does not exist, return null or handle accordingly
-            return null;
+            // Add the last updated timestamp
+            userStats.put("lastUpdated", java.time.LocalDateTime.now().toString());
+
+            // Update the JSON file with the user's statistics
+            JsonUtils.updateUserData(username, userStats);
+
+            logger.info("User statistics saved successfully for user: " + username);
+
+        } catch (IllegalArgumentException e) {
+            logger.severe("Error saving user statistics: " + e.getMessage());
+        } catch (IOException e) {
+            logger.severe("I/O error saving user statistics: " + e.getMessage());
         }
     }
 
-    // Placeholder: Convert the statistics object into a JSON string (replace with actual implementation)
-    private String convertStatisticsToJson(Statistics statistics) {
-        // Convert Statistics object to JSON format
-        // This will use a JSON library like Jackson or Gson in the actual implementation
-        return "{...}";  // Simplified placeholder
-    }
+    /**
+     * Retrieves a user's statistics from the JSON file. If the user does not
+     * exist, a new entry is created with default values.
+     *
+     * @param username The username of the user.
+     * @return A JsonNode containing the user's statistics, or null if an error
+     * occurs.
+     */
+    public static JsonNode getUserStatistics(String username) {
+        try {
+            // Retrieve the user's statistics from the JSON file
+            JsonNode userStats = JsonUtils.getUserData(username);
 
-    // Placeholder: Convert JSON content into a Statistics object (replace with actual implementation)
-    private Statistics convertJsonToStatistics(String jsonContent) {
-        // Parse the JSON content and create a Statistics object
-        // This will use a JSON library like Jackson or Gson in the actual implementation
-        return new Statistics(0, 0, 0, 0.0);  // Simplified placeholder
-    }
+            // If the user doesn't exist, automatically create a new entry with default statistics
+            if (userStats == null) {
+                logger.info("User not found, creating a new entry for user: " + username);
+                ObjectNode defaultStats = createDefaultStatistics(username);
+                JsonUtils.updateUserData(username, defaultStats);
+                return defaultStats;  // Return the newly created default stats
+            }
 
-    // Placeholder: Write the content to a file (replace with actual implementation)
-    private void writeFile(File file, String content) {
-        // Write the content to the file (handle file I/O)
-        // This will handle I/O operations and exceptions in the actual implementation
-    }
+            return userStats;
 
-    // Placeholder: Read the content from a file (replace with actual implementation)
-    private String readFile(File file) {
-        // Read the content from the file (handle file I/O)
-        // This will handle I/O operations and exceptions in the actual implementation
-        return "";  // Simplified placeholder
+        } catch (IOException e) {
+            logger.severe("Error retrieving user statistics: " + e.getMessage());
+            return null;
+        }
     }
 }
