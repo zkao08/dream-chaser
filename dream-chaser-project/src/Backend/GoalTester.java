@@ -4,7 +4,7 @@ package Backend;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Main {
+public class GoalTester {
     public static void main(String[] args) {
         // Create tasks
         Task task1 = new Task("Research project requirements", 5, 0);

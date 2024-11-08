@@ -1,12 +1,22 @@
 package Backend;
 
+import java.io.*;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+import java.time.LocalDate;
+
 /**
  * The AIAssistant class integrates with a generative AI API to provide users 
  * with assistance in creating and managing goals.
  * 
- * Author: Zachary Kao
- * Version: 1.0
- * Since: 10/04/2024
+ * @Author: Zachary Kao
+ * @Version: 1.3
+ * @Since: 11/8/2024
  * 
  * Usage:
  * This class allows users to leverage AI capabilities 
@@ -15,35 +25,184 @@ package Backend;
  * Change Log:
  * Version 1.0 (10/04/2024):
  * - Initial creation of the AIAssistant class.
+ * Version 1.1 (10/20/2024):
+ * - Import ChatGPT integration test code
+ * Version 1.2 (10/30/2024):
+ * - Format ChatGPT response as CSV
+ * Version 1.3 (11/8/2024):
+ * - Update to not use deprecated methods
+ * - Create methods to prompt ChatGPT and parse the output to return tasks
  */
 public class AIAssistant
 {
-	//Static methods for getting AI assistance
 	
 	/**
-	 * A method to prompt the AI for a suggestion on how long a task will take to accomplish
+	 * Load ENV variables into system properties
+	 * Used to set the ChatGPT API key
 	 * 
-	 * @param task : description or name of the task
-	 * @return Task? data structure with task description and time estimate
+	 * @param filePath : the filepath of the .env file
 	 */
-	public static void getTaskTimeAI(String task)
+	public static void loadEnvFile(String filePath) 
 	{
-		//query the AI with a prompt such as "Give me an estimate for how long 'task' will take in the format 'task : time'"
-		//return the result 
+        Properties properties = new Properties();
+        try 
+        {
+            File envFile = new File(filePath);
+            if (envFile.exists()) 
+            {
+                FileInputStream fileInputStream = new FileInputStream(envFile);
+                properties.load(fileInputStream);
+
+                // Set each property as a system environment variable
+                for (String key : properties.stringPropertyNames()) 
+                {
+                    String value = properties.getProperty(key);
+                    System.setProperty(key, value);
+                }
+
+                fileInputStream.close();
+            } 
+            else
+            {
+                System.out.println(".env file not found at " + filePath);
+            }
+        } 
+        catch (IOException e) 
+        {
+            e.printStackTrace();
+        }
+    }
+	
+	/**
+	 * Send a prompt to ChatGPT and return a response
+	 * 
+	 * @param prompt : the prompt to send
+	 * @return the response
+	 */
+	public static String chatGPT(String prompt) 
+	{
+		String url = "https://api.openai.com/v1/chat/completions";
+		String apiKey = System.getProperty("OPENAI_API_KEY");
+		String model = "gpt-3.5-turbo";
+		
+		try 
+		{
+			//wrap prompt in request body
+			String body = "{\"model\": \"" + model + "\", \"messages\": [{\"role\": \"user\", \"content\": \"" + prompt + "\"}]}";
+			
+			//create HttpClient to handle requests and responses
+			HttpClient client = HttpClient.newHttpClient();
+			
+			//create HttpRequest
+			HttpRequest request = HttpRequest.newBuilder()
+				.uri(URI.create(url))
+				.header("Authorization", "Bearer " + apiKey)
+				.header("Content-Type", "application/json")
+				.POST(HttpRequest.BodyPublishers.ofString(body))
+				.build();
+				
+			//send request and get the response
+			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+			
+			//extract and return message from JSON response
+			return extractMessageFromJSONResponse(response.body());
+		           	
+		} 
+		catch (IOException | InterruptedException e) 
+		{
+			throw new RuntimeException(e);
+		}
+	}
+
+	/**
+	 * Extract the response as a string from the JSON returned by ChatGPT
+	 * 
+	 * @param response the resposne from ChatGPT as a JSON string
+	 * @return the response as text string
+	 */
+	public static String extractMessageFromJSONResponse(String response) 
+	{
+		//find the start of the content in JSON and skip the header
+		int start = response.indexOf("content")+ 11;
+		   
+		//find the end of the response
+		int end = response.indexOf("\"", start);
+		   
+		//extract the message
+		String extractedMessage = response.substring(start, end);
+		   
+		//replace newlines for formatting and return
+		return extractedMessage.replace("\\n", "\n");
+		
 	}
 	
 	/**
-	 * A method to prompt the AI to break down a goal into a list of tasks
+	 * Helper function to parse the CSV returned by a ChatGPT response
+	 * and turn it into a list of tasks
 	 * 
-	 * @param goal : description or name of the goal
-	 * @return List<Task?> : a list of tasks
+	 * @param csv : the CSV output from ChatGPT
+	 * @return a List of tasks
 	 */
-	public static void getTasksAI(String goal)
+	public static List<Task> parseCSV(String csv)
 	{
-		//query the AI with a prompt such as "Give me a list of tasks to break down 'goal' 
-		//into achievable parts in the format 'task, task, task,...'"
+		//create a list to store the output
+		List<Task> tasks = new ArrayList<Task>();
 		
-		//use the method getTaskTimeAI to get the time for each task
-		//add all the tasks to a list and return it
+		//split the CSV by lines
+		String[] lines = csv.split("\n");
+		
+		//start at 1 to skip the header
+		for(int i = 1; i < lines.length; i++)
+		{
+			//get the line and trim any potential unnecessary whitespace
+			String line = lines[i].trim();
+			
+			//skip line if empty
+			if(line.isEmpty()) 
+				continue;
+			
+			//split the line by commas
+			String[] fields = line.split(",");
+			
+			//extract fields and trim whitespace
+			String taskName = fields[0].trim();
+			int hours = Integer.parseInt(fields[1].trim());
+			int minutes = Integer.parseInt(fields[2].trim());
+			
+			//create a task object and add it to the list
+			Task task = new Task(taskName, hours, minutes);
+			tasks.add(task);
+		}
+		
+		return tasks;
+	}
+	
+	//Static methods for getting AI assistance
+	
+	/**
+	 * A method to prompt the AI to break down a goal into a list of tasks
+	 * Directly modifies the goal object
+	 * 
+	 * @param goal : the goal to be edited by the AI
+	 * @return List<Task> : a list of tasks
+	 */
+	public static void getTasksAI(Goal goal)
+	{
+		//send a prompt to get tasks for the goal name to ChatGPT
+		String response = chatGPT("Give me a list of tasks to break down the goal '" + goal.getGoalName() + "' "
+				+ "starting " + LocalDate.now() + " into smaller achievable tasks. "
+				+ "Format the output in a csv as follows, which each task on a new line: 'task name, hours to complete task, minutes to complete task' "
+				+ "The hours and minutes should add up to the total time estimated to complete the task "
+				+ "and the csv should not be numbered and the first line should be the format specification.");
+		
+		//parse the response into a list of tasks
+		List<Task> tasks = new ArrayList<Task>();
+		tasks = parseCSV(response);
+		
+		//add the tasks to the goal
+		for(Task task : tasks)
+		{
+			goal.addTask(task);
+		}
 	}
 }
