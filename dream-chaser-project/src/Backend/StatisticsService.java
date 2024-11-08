@@ -1,27 +1,19 @@
 package Backend;
 
 // Import necessary libraries
-import java.util.List;
-import org.json.JSONObject;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
- * StatisticsService.java 
- * Created By: Max Henson 
- * Date Created: 10/03/2024 Version: 1.0
+ * StatisticsService.java Created By: Max Henson Date Created: 10/03/2024
+ * Version: 1.0
  *
- * Description: Service class responsible for managing statistics logic and updating user statistics.
- * It uses StatisticsFileManager for reading and writing statistics and provides
- * user-facing functionality. 
+ * Description:
  *
- * Usage: Undetermined
+ * Usage:
  *
- * Change Log: 
- * Version 1.0 (10/03/2024): Created placeholder functions for setters, getters, etc
- * Version 1.1 (10/30/2024): - Placeholders replaced with methods - Implemented new methods such as
- * saveStatistics, displayStatistics, updateStatistics, and addTask - Currently trying to implement
- * org.json library for json file
+ * Change Log: Version 1.0 (10/30/2024): - Updated placeholder functions/code,
+ * added a method to increment number of tasks a user has started
  */
-
 /**
  * Service class responsible for managing statistics logic. It uses
  * StatisticsFileManager for reading and writing statistics and provides
@@ -48,17 +40,16 @@ public class StatisticsService {
     }
 
     /**
-     * !!!!!!!!!!!!!!!!!!!!!!!!!!! WILL MOST LIKELY BE REPLACED BY FRONT-END !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
      * Retrieves user statistics and formats them for display. This method is
      * designed to return statistics in a user-friendly format.
-     * 
+     *
      * @param username The username of the user.
      * @return A formatted string of the user's statistics, or an error message
      * if not found.
      */
     public static String displayStatistics(String username) {
         // Retrieve the user's statistics from the file
-        JSONObject userStats = StatisticsFileManager.getUserStatistics(username);
+        JsonNode userStats = StatisticsFileManager.getUserStatistics(username);
 
         // If the user data is found, format it for display
         if (userStats != null) {
@@ -70,11 +61,11 @@ public class StatisticsService {
                     + "Completion Percentage: %.2f%%\n"
                     + "Last Updated: %s\n",
                     username,
-                    userStats.getInt("totalTimeSpent"),
-                    userStats.getInt("totalTasks"),
-                    userStats.getInt("completedTasks"),
-                    userStats.getDouble("completionPercentage"),
-                    userStats.getString("lastUpdated")
+                    userStats.get("totalTimeSpent").asInt(),
+                    userStats.get("totalTasks").asInt(),
+                    userStats.get("completedTasks").asInt(),
+                    userStats.get("completionPercentage").asDouble(),
+                    userStats.get("lastUpdated").asText()
             );
         } else {
             return "User statistics not found.";
@@ -91,13 +82,13 @@ public class StatisticsService {
      */
     public static void updateStatistics(String username, int additionalTime, int tasksCompleted) {
         // Retrieve the existing statistics for the user
-        JSONObject userStats = StatisticsFileManager.getUserStatistics(username);
+        JsonNode userStats = StatisticsFileManager.getUserStatistics(username);
 
         if (userStats != null) {
             // Get the current statistics values
-            int totalTimeSpent = userStats.getInt("totalTimeSpent") + additionalTime;
-            int totalTasks = userStats.getInt("totalTasks");
-            int completedTasks = userStats.getInt("completedTasks") + tasksCompleted;
+            int totalTimeSpent = userStats.get("totalTimeSpent").asInt() + additionalTime;
+            int totalTasks = userStats.get("totalTasks").asInt();
+            int completedTasks = userStats.get("completedTasks").asInt() + tasksCompleted;
 
             // Recalculate completion percentage
             double completionPercentage = (totalTasks > 0) ? ((double) completedTasks / totalTasks) * 100 : 0.0;
@@ -117,13 +108,13 @@ public class StatisticsService {
      */
     public static void addTask(String username) {
         // Retrieve the existing statistics for the user
-        JSONObject userStats = StatisticsFileManager.getUserStatistics(username);
+        JsonNode userStats = StatisticsFileManager.getUserStatistics(username);
 
         if (userStats != null) {
             // Increment the total tasks
-            int totalTasks = userStats.getInt("totalTasks") + 1;
-            int totalTimeSpent = userStats.getInt("totalTimeSpent");
-            int completedTasks = userStats.getInt("completedTasks");
+            int totalTasks = userStats.get("totalTasks").asInt() + 1;
+            int totalTimeSpent = userStats.get("totalTimeSpent").asInt();
+            int completedTasks = userStats.get("completedTasks").asInt();
 
             // Recalculate completion percentage
             double completionPercentage = (totalTasks > 0) ? ((double) completedTasks / totalTasks) * 100 : 0.0;
@@ -135,3 +126,4 @@ public class StatisticsService {
         }
     }
 }
+//dummy commit 3 
