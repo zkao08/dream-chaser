@@ -1,6 +1,5 @@
 package Backend;
 
-
 /**
  * The AIAssistant class integrates with a generative AI API to provide users 
  * with assistance in creating and managing goals.
