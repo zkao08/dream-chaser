@@ -70,16 +70,16 @@ import java.util.logging.Logger;
       * Updates a specific user's data in the JSON file.
       * If the user does not exist, their data is added. If they do exist, their data is updated.
       * @param username The key (username) to update in the JSON.
-      * @param userData The user's statistics data as a JsonNode.
+      * @param userStats The user's statistics data as a JsonNode.
       * @throws IOException if there's an issue reading or writing the file.
       */
-     public static void updateUserData(String username, JsonNode userData) throws IOException {
+     public static void updateUserData(String username, JsonNode userStats) throws IOException {
          // Read the current JSON file content
          JsonNode rootNode = readJsonFile();
 
          // Cast rootNode as an ObjectNode to allow modification (ObjectNode allows adding/updating fields)
          if (rootNode.isObject()) {
-             ((ObjectNode) rootNode).set(username, userData);  // Update or add the user data
+             ((ObjectNode) rootNode).set(username, userStats);  // Update or add the user data
          }
 
          // Write the updated JSON data back to the file
