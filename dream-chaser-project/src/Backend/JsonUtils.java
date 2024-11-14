@@ -28,7 +28,7 @@ import java.util.logging.Logger;
  public class JsonUtils {
 
      // Constants for file paths and logger
-     private static final String FILE_PATH = "users.Json";  // Main JSON file where user data is stored
+     private static final String FILE_PATH = "UserData/users.Json";  // Main JSON file where user data is stored
      private static final Logger logger = Logger.getLogger(JsonUtils.class.getName());  // Logger for logging errors and info
      public static ObjectMapper objectMapper = new ObjectMapper();  // ObjectMapper to handle JSON operations
 
