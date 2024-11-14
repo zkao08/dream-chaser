@@ -47,6 +47,7 @@ public class StatisticsService {
      * @return A formatted string of the user's statistics, or an error message
      * if not found.
      */
+    /*
     public static String displayStatistics(String username) {
         // Retrieve the user's statistics from the file
         JsonNode userStats = StatisticsFileManager.getUserStatistics(username);
@@ -71,6 +72,7 @@ public class StatisticsService {
             return "User statistics not found.";
         }
     }
+    */
 
     /**
      * Updates the statistics for a user by adding time and task information.
