@@ -67,7 +67,18 @@ public class Goal {
     }
 
     public ArrayList<Task> getTasks() { return tasks; }
-    public void addTask(Task task) { tasks.add(task); }
+    public void addTask(Task task) 
+    { 
+    	tasks.add(task); 
+    	
+    	//add the task's time to the goal's time
+    	this.requiredTimeHours += task.getTimeToCompleteHours();
+    	this.requiredTimeMinutes += task.getTimeToCompleteMinutes();
+    	
+    	//rollover extra minutes to hours
+    	this.requiredTimeHours += (int)(this.requiredTimeMinutes / 60);
+    	this.requiredTimeMinutes = (this.requiredTimeMinutes % 60);
+	}
 
     public String getGoalName() { return goalName; }
     public String getGoalDescription() { return goalDescription; }
