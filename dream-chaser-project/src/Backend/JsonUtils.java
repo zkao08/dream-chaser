@@ -1,130 +1,109 @@
 package Backend;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /**
- * StatisticsTester.java 
+ * jsonUtils.java 
  * Created By: Max Henson 
- * Date Created: 10/30/2024
+ * Date Created: 10/03/2024
  * Version: 1.0
  *
- * Description: This class is responsible for testing the functionality of the 
- * StatisticsFileManager and StatisticsService classes. It includes tests for 
- * creating, updating, retrieving, and saving user statistics.
+ * Description: Utility class for handling JSON read/write operations. This
+ * class abstracts all interactions with the users.json file using `org.json`.
  *
  * Usage:
- * - Run the main method to execute the tests on the user statistics functionality.
- * 
- * Change Log:
- * Version 1.0 (10/30/2024): Initial version created for testing user statistics.
- * Version 2.0 (11/16/2024): Updated version for testing necessary functions, updated commenting,
- * added file header.
+ *
+ * Change Log: Version 1.0 (10/30/2024): - Updated code, moved it into Backend folder
  */
-public class StatisticsTester {
+
+ /**
+  * Utility class for handling JSON read/write operations.
+  * This class abstracts all interactions with the users.Json file.
+  */
+public class JsonUtils {
+
+    private static final String FILE_PATH = "users.Json";
+    private static final Logger LOGGER = Logger.getLogger(JsonUtils.class.getName());
+    static final ObjectMapper objectMapper = new ObjectMapper();
 
     /**
-     * Main method to execute all the tests.
-     * It runs individual test methods for creating, updating, retrieving, 
-     * and saving user statistics.
+     * Reads the JSON file and returns the root JsonNode. 
+     * If the file does not exist, it creates a new empty ObjectNode.
+     *
+     * @return the root JsonNode of the JSON file, or a new empty ObjectNode if the file is missing
      */
-    public static void main(String[] args) {
-        System.out.println("Starting tests...\n");
-
-        // Run all the test methods
-        testCreateNewUser();
-        testUpdateUserStatistics();
-        testRetrieveUserStatistics();
-        testSaveUserStatistics();
-
-        System.out.println("\nAll tests completed.");
-    }
-
-    /**
-     * Test the creation of a new user and the generation of default statistics.
-     * It checks if the default statistics are created correctly when a new user is added.
-     */
-    public static void testCreateNewUser() {
-        System.out.println("Running: testCreateNewUser");
-        String username = "testUser1";
-
-        // Try to retrieve statistics for the new user
-        JsonNode userStats = StatisticsFileManager.getUserStatistics(username);
-
-        // Check if the statistics for the user exist
-        if (userStats != null) {
-            System.out.println("testCreateNewUser: SUCCESS - Default statistics created for user " + username);
-        } else {
-            System.out.println("testCreateNewUser: FAILURE - Could not create default statistics for user " + username);
-        }
-    }
-
-    /**
-     * Test the updating of user statistics.
-     * It verifies that the user statistics are correctly updated when new data is provided.
-     */
-    public static void testUpdateUserStatistics() {
-        System.out.println("Running: testUpdateUserStatistics");
-        String username = "testUser1";
-        int totalTimeSpent = 5;
-        int totalTasks = 10;
-        int completedTasks = 7;
-
-        // Update the statistics for the user
-        StatisticsService.saveStatistics(username, totalTimeSpent, totalTasks, completedTasks);
-
-        // Retrieve the updated statistics
-        JsonNode userStats = StatisticsFileManager.getUserStatistics(username);
-
-        // Check if the statistics match the expected values
-        if (userStats != null &&
-            userStats.get("totalTimeSpent").asInt() == totalTimeSpent &&
-            userStats.get("totalTasks").asInt() == totalTasks &&
-            userStats.get("completedTasks").asInt() == completedTasks) {
-            System.out.println("testUpdateUserStatistics: SUCCESS - Statistics updated for user " + username);
-        } else {
-            System.out.println("testUpdateUserStatistics: FAILURE - Statistics not updated correctly for user " + username);
-        }
-    }
-
-    /**
-     * Test the retrieval of user statistics.
-     * It verifies that user statistics can be successfully retrieved.
-     */
-    public static void testRetrieveUserStatistics() {
-        System.out.println("Running: testRetrieveUserStatistics");
-        String username = "testUser1";
-
-        // Retrieve the statistics for the user
-        JsonNode userStats = StatisticsFileManager.getUserStatistics(username);
-
-        // Check if the statistics were found
-        if (userStats != null) {
-            System.out.println("testRetrieveUserStatistics: SUCCESS - Retrieved statistics for user " + username);
-        } else {
-            System.out.println("testRetrieveUserStatistics: FAILURE - No statistics found for user " + username);
-        }
-    }
-
-    /**
-     * Test saving user statistics.
-     * It checks if user statistics can be saved and written to the data store correctly.
-     */
-    public static void testSaveUserStatistics() {
-        System.out.println("Running: testSaveUserStatistics");
-        String username = "testUser1";
-        int totalTimeSpent = 10;
-        int totalTasks = 20;
-        int completedTasks = 15;
-        double completionPercentage = completedTasks / (double) totalTasks;
-
+    public static JsonNode readJsonFile() {
         try {
-            // Save the statistics for the user
-            StatisticsFileManager.saveUserStatistics(username, totalTimeSpent, totalTasks, completedTasks, completionPercentage);
-            System.out.println("testSaveUserStatistics: SUCCESS - User statistics saved for user " + username);
-        } catch (Exception e) {
-            // Handle failure to save statistics
-            System.out.println("testSaveUserStatistics: FAILURE - Could not save statistics for user " + username);
-            e.printStackTrace(); // Optionally, print the exception for debugging purposes
+            File file = new File(FILE_PATH);
+            if (!file.exists()) {
+                LOGGER.log(Level.WARNING, "JSON file not found, creating a new empty users.Json file.");
+                return createEmptyJsonFile();
+            }
+            return objectMapper.readTree(file);
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "I/O error reading JSON file: {0}", e.getMessage());
+            return createEmptyJsonFile();
         }
     }
-} // End of StatisticsTester method
+
+    /**
+     * Writes the given JsonNode to the JSON file, replacing its content.
+     *
+     * @param root the JsonNode to write to the JSON file
+     */
+    public static void writeJsonFile(JsonNode root) {
+        try {
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(FILE_PATH), root);
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "I/O error writing to JSON file: {0}", e.getMessage());
+        }
+    }
+
+    /**
+     * Retrieves the data for a specific user from the JSON file.
+     *
+     * @param username the username to retrieve data for
+     * @return the JsonNode representing the user's data, or null if the user is not found
+     */
+    public static JsonNode getUserData(String username) {
+        JsonNode root = readJsonFile();
+        return root.path(username).isMissingNode() ? null : root.get(username);
+    }
+
+    /**
+     * Updates the data for a specific user in the JSON file.
+     * If the user does not exist, it creates a new entry.
+     *
+     * @param username the username to update data for
+     * @param userData the JsonNode representing the user's data
+     */
+    public static void updateUserData(String username, JsonNode userData) throws IOException {
+        JsonNode root = readJsonFile();
+
+        if (root instanceof ObjectNode) {
+            ((ObjectNode) root).set(username, userData);
+            writeJsonFile(root);
+        } else {
+            LOGGER.log(Level.SEVERE, "Root JSON node is not an ObjectNode. Cannot update user data.");
+        }
+    }
+
+    /**
+     * Creates a new empty JSON file with an empty root ObjectNode.
+     *
+     * @return a new empty ObjectNode
+     */
+    private static ObjectNode createEmptyJsonFile() {
+        ObjectNode emptyRoot = objectMapper.createObjectNode();
+        writeJsonFile(emptyRoot);
+        return emptyRoot;
+    }
+}	// End of JsonUtils class
