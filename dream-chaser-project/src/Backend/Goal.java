@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.time.LocalDate;
 
 public class Goal {
+	//attributes
     private String goalName;
     private String goalDescription;
     private ArrayList<Task> tasks;
@@ -28,16 +29,21 @@ public class Goal {
      * description length, and time limits.
      */
     public Goal(String goalName, ArrayList<Task> tasks, LocalDate dueDate) {
+    	//initialize attributes with input parameters
         setGoalName(goalName);
-        //setGoalDescription(goalDescription);
-        if (tasks == null) {
+        if (this.tasks == null) {
             this.tasks = new ArrayList<>();
-        } else {
-            for(Task task : tasks)
-            {
-            	this.addTask(task);
-            }
+        } 
+        
+        if(tasks != null)
+        {
+	        for(Task task : tasks)
+	        {
+	        	this.addTask(task);
+	        }
         }
+        
+        //initialize to default values
         this.timeLoggedHours = 0;
         this.timeLoggedMinutes = 0;
         this.startDate = LocalDate.now();
@@ -78,6 +84,8 @@ public class Goal {
     }
 
     public ArrayList<Task> getTasks() { return tasks; }
+    
+    //add a task to the goal, and increase the time it takes to complete a task
     public void addTask(Task task) 
     { 
     	tasks.add(task); 
@@ -91,6 +99,7 @@ public class Goal {
     	this.requiredTimeMinutes = (this.requiredTimeMinutes % 60);
 	}
 
+    //Getter methods for attributes
     public String getGoalName() { return goalName; }
     public String getGoalDescription() { return goalDescription; }
     public int getRequiredTimeHours() { return requiredTimeHours; }
