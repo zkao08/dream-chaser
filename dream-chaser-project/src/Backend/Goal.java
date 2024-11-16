@@ -1,8 +1,8 @@
 /**
  * Goal.java
  * Author: Luke Barnett
- * Version: 2
- * Date: 10/28/2024
+ * Version: 3.0
+ * Date: 11/16/2024
  * Description: This class represents a goal with associated tasks, required time,
  * time logged, and start date. Provides methods to retrieve and update goal details.
  */
@@ -10,7 +10,7 @@
 package Backend;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.time.LocalDate;
 
 public class Goal {
     private String goalName;
@@ -20,24 +20,27 @@ public class Goal {
     private int requiredTimeMinutes;
     private int timeLoggedHours;
     private int timeLoggedMinutes;
-    private Date startDate;
+    private LocalDate startDate;
+    private LocalDate dueDate;
 
     /**
      * Constructor initializes goal attributes with validations for goal name,
      * description length, and time limits.
      */
-    public Goal(String goalName, String goalDescription, ArrayList<Task> tasks, int requiredTimeHours, int requiredTimeMinutes, Date startDate) {
+    public Goal(String goalName, ArrayList<Task> tasks, LocalDate dueDate) {
         setGoalName(goalName);
-        setGoalDescription(goalDescription);
+        //setGoalDescription(goalDescription);
         if (tasks == null) {
             this.tasks = new ArrayList<>();
         } else {
-            this.tasks = tasks;
+            for(Task task : tasks)
+            {
+            	this.addTask(task);
+            }
         }
-        setRequiredTime(requiredTimeHours, requiredTimeMinutes);
         this.timeLoggedHours = 0;
         this.timeLoggedMinutes = 0;
-        this.startDate = startDate;
+        this.startDate = LocalDate.now();
     }
 
     // Setters and Getters with input validation
@@ -65,6 +68,14 @@ public class Goal {
             throw new IllegalArgumentException("Time should be realistic, within 0-1500 hours and 0-59 minutes.");
         }
     }
+    
+    public void setDueDate(LocalDate dueDate)
+    {
+    	if(dueDate != null)
+    	{
+    		this.dueDate = dueDate;
+    	}
+    }
 
     public ArrayList<Task> getTasks() { return tasks; }
     public void addTask(Task task) 
@@ -84,8 +95,9 @@ public class Goal {
     public String getGoalDescription() { return goalDescription; }
     public int getRequiredTimeHours() { return requiredTimeHours; }
     public int getRequiredTimeMinutes() { return requiredTimeMinutes; }
-    public Date getStartDate() { return startDate; }
+    public LocalDate getStartDate() { return startDate; }
     public int getTimeLoggedHours() { return timeLoggedHours; }
     public int getTimeLoggedMinutes() { return timeLoggedMinutes; }
+    public LocalDate getDueDate() { return dueDate; }
 }
 

@@ -20,7 +20,7 @@ public class GoalTester {
         tasks.add(task4);
 
         // Create a goal with tasks
-        Goal goal = new Goal("Develop Personal Project Tracker", "Design and implement a project tracker app.", tasks, 400, 0, new Date());
+        /*Goal goal = new Goal("Develop Personal Project Tracker", "Design and implement a project tracker app.", tasks, 400, 0, new Date());
 
         // Display goal and task details
         System.out.println("Goal Created:");
@@ -29,6 +29,6 @@ public class GoalTester {
         System.out.println("Tasks:");
         for (Task task : goal.getTasks()) {
             System.out.println(" - " + task);
-        }
+        }*/
     }
 }

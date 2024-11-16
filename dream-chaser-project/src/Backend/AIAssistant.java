@@ -32,6 +32,9 @@ import java.time.LocalDate;
  * Version 1.3 (11/8/2024):
  * - Update to not use deprecated methods
  * - Create methods to prompt ChatGPT and parse the output to return tasks
+ * Version 2.0 (11/17/2024):
+ * - Update to accept different parameters for goals
+ * - Returns a list of tasks instead of modifying a goal
  */
 public class AIAssistant
 {
@@ -186,13 +189,20 @@ public class AIAssistant
 	 * @param goal : the goal to be edited by the AI
 	 * @return List<Task> : a list of tasks
 	 */
-	public static void getTasksAI(Goal goal)
+	public static List<Task> getTasksAI(String goal, LocalDate dueDate)
 	{
+		//do not process request if goal has no name or due date
+		if(goal == "" || dueDate == null)
+		{
+			return null;
+		}
+		
 		//send a prompt to get tasks for the goal name to ChatGPT
-		String response = chatGPT("Give me a list of tasks to break down the goal '" + goal.getGoalName() + "' "
-				+ "starting " + LocalDate.now() + " into smaller achievable tasks. "
+		String response = chatGPT("Give me a list of tasks to break down the goal '" + goal + "' "
+				+ "starting " + LocalDate.now() + " and ending " + dueDate + " into smaller achievable tasks. "
 				+ "Format the output in a csv as follows, which each task on a new line: 'task name, hours to complete task, minutes to complete task' "
 				+ "The hours and minutes should add up to the total time estimated to complete the task. "
+				+ "The required time to complete all tasks should not exceed the time until the due date. "
 				+ "The tasks should not be numbered and the first line should be the format specification. "
 				+ "The tasks should be simple, achievable through self-study, and should not require professional instruction, public performance, or additional resources. "
 				+ "Ensure task names are short, simple, and do not contain commas or special punctuation.");
@@ -201,10 +211,6 @@ public class AIAssistant
 		List<Task> tasks = new ArrayList<Task>();
 		tasks = parseCSV(response);
 		
-		//add the tasks to the goal
-		for(Task task : tasks)
-		{
-			goal.addTask(task);
-		}
+		return tasks;
 	}
 }
