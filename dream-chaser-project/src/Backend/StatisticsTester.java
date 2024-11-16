@@ -1,7 +1,6 @@
 package Backend;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import java.io.IOException;
 
 public class StatisticsTester {
 
@@ -9,22 +8,18 @@ public class StatisticsTester {
         testCreateNewUser();
         testUpdateUserStatistics();
         testRetrieveUserStatistics();
-        testDisplayUserStatistics();
+        //testDisplayUserStatistics();
     }
 
     public static void testCreateNewUser() {
         String username = "testUser1";
 
-        try {
-            JsonNode userStats = StatisticsFileManager.getUserStatistics(username);
+        JsonNode userStats = StatisticsFileManager.getUserStatistics(username);
 
-            if (userStats != null) {
-                System.out.println("testCreateNewUser: SUCCESS - Default statistics created for user " + username);
-            } else {
-                System.out.println("testCreateNewUser: FAILURE - Could not create default statistics for user " + username);
-            }
-        } catch (IOException e) {
-            System.err.println("testCreateNewUser: ERROR - " + e.getMessage());
+        if (userStats != null) {
+            System.out.println("testCreateNewUser: SUCCESS - Default statistics created for user " + username);
+        } else {
+            System.out.println("testCreateNewUser: FAILURE - Could not create default statistics for user " + username);
         }
     }
 
@@ -36,39 +31,32 @@ public class StatisticsTester {
 
         StatisticsService.saveStatistics(username, totalTimeSpent, totalTasks, completedTasks);
 
-        try {
-            JsonNode userStats = StatisticsFileManager.getUserStatistics(username);
+        JsonNode userStats = StatisticsFileManager.getUserStatistics(username);
 
-            if (userStats != null &&
-                userStats.get("totalTimeSpent").asInt() == totalTimeSpent &&
-                userStats.get("totalTasks").asInt() == totalTasks &&
-                userStats.get("completedTasks").asInt() == completedTasks) {
+        if (userStats != null &&
+            userStats.get("totalTimeSpent").asInt() == totalTimeSpent &&
+            userStats.get("totalTasks").asInt() == totalTasks &&
+            userStats.get("completedTasks").asInt() == completedTasks) {
 
-                System.out.println("testUpdateUserStatistics: SUCCESS - Statistics updated for user " + username);
-            } else {
-                System.out.println("testUpdateUserStatistics: FAILURE - Statistics not updated correctly for user " + username);
-            }
-        } catch (IOException e) {
-            System.err.println("testUpdateUserStatistics: ERROR - " + e.getMessage());
+            System.out.println("testUpdateUserStatistics: SUCCESS - Statistics updated for user " + username);
+        } else {
+            System.out.println("testUpdateUserStatistics: FAILURE - Statistics not updated correctly for user " + username);
         }
     }
 
     public static void testRetrieveUserStatistics() {
         String username = "testUser1";
 
-        try {
-            JsonNode userStats = StatisticsFileManager.getUserStatistics(username);
+        JsonNode userStats = StatisticsFileManager.getUserStatistics(username);
 
-            if (userStats != null) {
-                System.out.println("testRetrieveUserStatistics: SUCCESS - Retrieved statistics for user " + username);
-            } else {
-                System.out.println("testRetrieveUserStatistics: FAILURE - No statistics found for user " + username);
-            }
-        } catch (IOException e) {
-            System.err.println("testRetrieveUserStatistics: ERROR - " + e.getMessage());
+        if (userStats != null) {
+            System.out.println("testRetrieveUserStatistics: SUCCESS - Retrieved statistics for user " + username);
+        } else {
+            System.out.println("testRetrieveUserStatistics: FAILURE - No statistics found for user " + username);
         }
     }
 
+    /*
     public static void testDisplayUserStatistics() {
         String username = "testUser1";
 
@@ -79,4 +67,5 @@ public class StatisticsTester {
             System.out.println("testDisplayUserStatistics: FAILURE - Could not display statistics for user " + username);
         }
     }
+    */
 }

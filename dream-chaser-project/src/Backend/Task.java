@@ -2,8 +2,8 @@
 /**
  * Task.java
  * Author: Luke Barnett
- * Version: 2
- * Date: 10/28/2024
+ * Version: 3.0
+ * Date: 11/16/2024
  * Description: Represents a task with a name and estimated time to complete.
  */
 
@@ -13,13 +13,22 @@ public class Task {
     private String taskName;
     private int timeToCompleteHours;
     private int timeToCompleteMinutes;
+    private int loggedTimeHours;
+    private int loggedTimeMinutes;
+    private boolean isComplete;
 
     /**
      * Constructor for Task with name and time validation.
      */
     public Task(String taskName, int timeToCompleteHours, int timeToCompleteMinutes) {
+    	//initialize attributes with input parameters
         setTaskName(taskName);
         setTimeToComplete(timeToCompleteHours, timeToCompleteMinutes);
+        
+        //initialize values to 0
+        this.loggedTimeHours = 0;
+        this.loggedTimeMinutes = 0;
+        this.isComplete = false;
     }
 
     // Setters and Getters with input validation
@@ -48,4 +57,28 @@ public class Task {
     public String toString() {
         return "Task: " + taskName + " (" + timeToCompleteHours + " hours, " + timeToCompleteMinutes + " minutes)";
     }
+    
+    public int getLoggedTimeHours() { return loggedTimeHours; }
+    public int getLoggedTimeMinutes() { return loggedTimeMinutes; }
+    
+    //apply time to task
+    public void logTime(int hours, int minutes)
+    {
+		//add the logged time to this task
+    	this.loggedTimeHours += hours;
+    	this.loggedTimeMinutes += minutes;
+    	
+    	//rollover minutes to hours
+    	this.loggedTimeHours += (this.loggedTimeMinutes / 60);
+    	this.loggedTimeMinutes = (this.loggedTimeMinutes % 60);
+    	
+    	//check if task is considered complete
+    	if(this.loggedTimeHours >= this.timeToCompleteHours && this.loggedTimeMinutes >= this.timeToCompleteMinutes)
+    	{
+    		//mark task as complete
+    		this.isComplete = true;
+    	}
+    }
+    
+    public boolean getIsComplete() { return isComplete; }
 }
