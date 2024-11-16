@@ -3,6 +3,7 @@ package Backend;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.logging.Logger;
 
 /**
@@ -88,6 +89,8 @@ public class StatisticsFileManager {
             logger.severe("Error saving user statistics: " + e.getMessage());
         } catch (IOException e) {
             logger.severe("I/O error saving user statistics: " + e.getMessage());
+        } catch (Exception e) {
+            logger.severe("Unexpected error: " + e.getMessage());
         }
     }
 
@@ -119,4 +122,4 @@ public class StatisticsFileManager {
             return null;
         }
     }
-}
+}	// End of StatisticsFileManager class

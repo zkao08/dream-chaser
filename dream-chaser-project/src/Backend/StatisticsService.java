@@ -2,6 +2,7 @@ package Backend;
 
 // Import necessary libraries
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  * StatisticsService.java Created By: Max Henson Date Created: 10/03/2024
@@ -38,41 +39,6 @@ public class StatisticsService {
         // Save the statistics using the FileManager
         StatisticsFileManager.saveUserStatistics(username, totalTimeSpent, totalTasks, completedTasks, completionPercentage);
     }
-
-    /**
-     * Retrieves user statistics and formats them for display. This method is
-     * designed to return statistics in a user-friendly format.
-     *
-     * @param username The username of the user.
-     * @return A formatted string of the user's statistics, or an error message
-     * if not found.
-     */
-    /*
-    public static String displayStatistics(String username) {
-        // Retrieve the user's statistics from the file
-        JsonNode userStats = StatisticsFileManager.getUserStatistics(username);
-
-        // If the user data is found, format it for display
-        if (userStats != null) {
-            return String.format(
-                    "User: %s\n"
-                    + "Total Time Spent: %d hours\n"
-                    + "Total Tasks: %d\n"
-                    + "Completed Tasks: %d\n"
-                    + "Completion Percentage: %.2f%%\n"
-                    + "Last Updated: %s\n",
-                    username,
-                    userStats.get("totalTimeSpent").asInt(),
-                    userStats.get("totalTasks").asInt(),
-                    userStats.get("completedTasks").asInt(),
-                    userStats.get("completionPercentage").asDouble(),
-                    userStats.get("lastUpdated").asText()
-            );
-        } else {
-            return "User statistics not found.";
-        }
-    }
-    */
 
     /**
      * Updates the statistics for a user by adding time and task information.
@@ -127,5 +93,4 @@ public class StatisticsService {
             System.out.println("User not found: " + username);
         }
     }
-}
-//dummy commit 3 
+}	// End of StatisticsService class
