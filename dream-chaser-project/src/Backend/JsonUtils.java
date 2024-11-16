@@ -17,6 +17,8 @@ import com.fasterxml.jackson.databind.JsonNode;
  * 
  * Change Log:
  * Version 1.0 (10/30/2024): Initial version created for testing user statistics.
+ * Version 2.0 (11/16/2024): Updated version for testing necessary functions, updated commenting,
+ * added file header.
  */
 public class StatisticsTester {
 
