@@ -23,14 +23,15 @@ public class SignUpScreen extends JPanel {
 
         // Initialize the simulated database of users
         registeredUsers = new HashMap<>();
-        
+
         // Use GridBagLayout for better control over component placement
         setLayout(new GridBagLayout());
         setBackground(Color.WHITE); // Set a clean background color
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10); // Add spacing between components
+        gbc.insets = new Insets(15, 15, 15, 15); // Add spacing between components
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
+        // Title Label
         JLabel titleLabel = new JLabel("Sign Up");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -39,40 +40,45 @@ public class SignUpScreen extends JPanel {
         gbc.gridwidth = 2;
         add(titleLabel, gbc);
 
-        gbc.gridwidth = 1; // Reset grid width
+        // Reset grid width for the next components
+        gbc.gridwidth = 1;
 
+        // Username Label and Field
         JLabel usernameLabel = new JLabel("Username:");
         usernameLabel.setFont(new Font("Arial", Font.PLAIN, 14));
         gbc.gridx = 0;
         gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.WEST;
         add(usernameLabel, gbc);
 
-        // Initialize the usernameField here
-        usernameField = new JTextField();
+        usernameField = new JTextField(20);  // Set a default width for the text field
         gbc.gridx = 1;
         gbc.gridy = 1;
+        gbc.gridwidth = 1;  // Ensure it doesn't span multiple columns
         add(usernameField, gbc);
 
+        // Password Label and Field
         JLabel passwordLabel = new JLabel("Password:");
         passwordLabel.setFont(new Font("Arial", Font.PLAIN, 14));
         gbc.gridx = 0;
         gbc.gridy = 2;
+        gbc.anchor = GridBagConstraints.WEST;
         add(passwordLabel, gbc);
 
-        // Initialize the passwordField here
-        passwordField = new JPasswordField();
+        passwordField = new JPasswordField(20);  // Set a default width for the password field
         gbc.gridx = 1;
         gbc.gridy = 2;
         add(passwordField, gbc);
 
+        // Confirm Password Label and Field
         JLabel confirmPasswordLabel = new JLabel("Re-enter Password:");
         confirmPasswordLabel.setFont(new Font("Arial", Font.PLAIN, 14));
         gbc.gridx = 0;
         gbc.gridy = 3;
+        gbc.anchor = GridBagConstraints.WEST;
         add(confirmPasswordLabel, gbc);
 
-        // Initialize the confirmPasswordField here
-        confirmPasswordField = new JPasswordField();
+        confirmPasswordField = new JPasswordField(20);  // Set a default width for the confirm password field
         gbc.gridx = 1;
         gbc.gridy = 3;
         add(confirmPasswordField, gbc);
@@ -86,7 +92,7 @@ public class SignUpScreen extends JPanel {
         signUpButton.addActionListener(e -> handleSignUp());
         gbc.gridx = 0;
         gbc.gridy = 4;
-        gbc.gridwidth = 2;
+        gbc.gridwidth = 2; // Make the button span both columns
         add(signUpButton, gbc);
 
         // Back to Sign In Button
@@ -98,7 +104,7 @@ public class SignUpScreen extends JPanel {
         backButton.addActionListener(e -> cardLayout.show(mainPanel, "SignIn"));
         gbc.gridx = 0;
         gbc.gridy = 5;
-        gbc.gridwidth = 2;
+        gbc.gridwidth = 2; // Make the button span both columns
         add(backButton, gbc);
     }
 
