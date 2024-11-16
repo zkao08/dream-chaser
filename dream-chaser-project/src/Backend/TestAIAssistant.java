@@ -18,7 +18,7 @@ import java.util.ArrayList;
  * Version 1.0 (11/8/2024):
  * - Created tester for the AIAssistant class
  * Version 2.0 (11/16/2024):
- * - Update to match new verison of AIAssistant
+ * - Update to match new version of AIAssistant
  */
 
 public class TestAIAssistant
