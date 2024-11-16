@@ -12,6 +12,7 @@ public class SignInScreen extends JPanel {
     // Declare instance variables for the fields
     private JTextField usernameField;
     private JPasswordField passwordField;
+    private JCheckBox showPasswordCheckBox;  // Checkbox to toggle password visibility
 
     // Simulate a database of registered users (username -> password)
     private Map<String, String> registeredUsers;
@@ -67,6 +68,15 @@ public class SignInScreen extends JPanel {
         gbc.gridy = 2;
         add(passwordField, gbc);
 
+        // Show Password Checkbox
+        showPasswordCheckBox = new JCheckBox("Show Password");
+        showPasswordCheckBox.setFont(new Font("Arial", Font.PLAIN, 12));
+        gbc.gridx = 1;
+        gbc.gridy = 3;
+        gbc.anchor = GridBagConstraints.WEST;
+        showPasswordCheckBox.addActionListener(e -> togglePasswordVisibility());
+        add(showPasswordCheckBox, gbc);
+
         // Sign In Button
         JButton signInButton = new JButton("Sign In");
         signInButton.setFont(new Font("Arial", Font.BOLD, 14));
@@ -75,7 +85,7 @@ public class SignInScreen extends JPanel {
         signInButton.setFocusPainted(false);
         signInButton.addActionListener(e -> handleSignIn());
         gbc.gridx = 0;
-        gbc.gridy = 3;
+        gbc.gridy = 4;
         gbc.gridwidth = 2;
         add(signInButton, gbc);
 
@@ -87,9 +97,18 @@ public class SignInScreen extends JPanel {
         signUpButton.setFocusPainted(false);
         signUpButton.addActionListener(e -> cardLayout.show(mainPanel, "SignUp"));
         gbc.gridx = 0;
-        gbc.gridy = 4;
+        gbc.gridy = 5;
         gbc.gridwidth = 2;
         add(signUpButton, gbc);
+    }
+
+    // Method to toggle the visibility of the password field
+    private void togglePasswordVisibility() {
+        if (showPasswordCheckBox.isSelected()) {
+            passwordField.setEchoChar((char) 0);  // Show the password as plain text
+        } else {
+            passwordField.setEchoChar('*');  // Hide the password
+        }
     }
 
     private void handleSignIn() {

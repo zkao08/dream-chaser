@@ -13,6 +13,7 @@ public class SignUpScreen extends JPanel {
     private JTextField usernameField;
     private JPasswordField passwordField;
     private JPasswordField confirmPasswordField;
+    private JCheckBox showPasswordCheckBox;  // Checkbox to toggle password visibility
 
     // Simulate a "database" to store registered users (username -> password)
     private Map<String, String> registeredUsers;
@@ -83,6 +84,15 @@ public class SignUpScreen extends JPanel {
         gbc.gridy = 3;
         add(confirmPasswordField, gbc);
 
+        // Show Password Checkbox
+        showPasswordCheckBox = new JCheckBox("Show Password");
+        showPasswordCheckBox.setFont(new Font("Arial", Font.PLAIN, 12));
+        gbc.gridx = 1;
+        gbc.gridy = 4;
+        gbc.anchor = GridBagConstraints.WEST;
+        showPasswordCheckBox.addActionListener(e -> togglePasswordVisibility());
+        add(showPasswordCheckBox, gbc);
+
         // Sign Up Button
         JButton signUpButton = new JButton("Sign Up");
         signUpButton.setFont(new Font("Arial", Font.BOLD, 14));
@@ -91,7 +101,7 @@ public class SignUpScreen extends JPanel {
         signUpButton.setFocusPainted(false);
         signUpButton.addActionListener(e -> handleSignUp());
         gbc.gridx = 0;
-        gbc.gridy = 4;
+        gbc.gridy = 5;
         gbc.gridwidth = 2; // Make the button span both columns
         add(signUpButton, gbc);
 
@@ -103,9 +113,20 @@ public class SignUpScreen extends JPanel {
         backButton.setFocusPainted(false);
         backButton.addActionListener(e -> cardLayout.show(mainPanel, "SignIn"));
         gbc.gridx = 0;
-        gbc.gridy = 5;
+        gbc.gridy = 6;
         gbc.gridwidth = 2; // Make the button span both columns
         add(backButton, gbc);
+    }
+
+    // Method to toggle the visibility of the password fields
+    private void togglePasswordVisibility() {
+        if (showPasswordCheckBox.isSelected()) {
+            passwordField.setEchoChar((char) 0);  // Set the echo character to 0 to display the password
+            confirmPasswordField.setEchoChar((char) 0);  // Set the echo character to 0 to display the password
+        } else {
+            passwordField.setEchoChar('*');  // Reset to the default '*' to mask the password
+            confirmPasswordField.setEchoChar('*');  // Reset to the default '*' to mask the password
+        }
     }
 
     private void handleSignUp() {
