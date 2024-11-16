@@ -13,6 +13,9 @@ public class Task {
     private String taskName;
     private int timeToCompleteHours;
     private int timeToCompleteMinutes;
+    private int loggedTimeHours = 0;
+    private int loggedTimeMinutes = 0;
+    private boolean isComplete = false;
 
     /**
      * Constructor for Task with name and time validation.
@@ -48,4 +51,28 @@ public class Task {
     public String toString() {
         return "Task: " + taskName + " (" + timeToCompleteHours + " hours, " + timeToCompleteMinutes + " minutes)";
     }
+    
+    public int getLoggedTimeHours() { return loggedTimeHours; }
+    public int getLoggedTimeMinutes() { return loggedTimeMinutes; }
+    
+    //apply time to task
+    public void logTime(int hours, int minutes)
+    {
+		//add the logged time to this task
+    	this.loggedTimeHours += hours;
+    	this.loggedTimeMinutes += minutes;
+    	
+    	//rollover minutes to hours
+    	this.loggedTimeHours += (this.loggedTimeMinutes / 60);
+    	this.loggedTimeMinutes = (this.loggedTimeMinutes % 60);
+    	
+    	//check if task is considered complete
+    	if(this.loggedTimeHours >= this.timeToCompleteHours && this.loggedTimeMinutes >= this.timeToCompleteMinutes)
+    	{
+    		//mark task as complete
+    		this.isComplete = true;
+    	}
+    }
+    
+    public boolean getIsComplete() { return isComplete; }
 }

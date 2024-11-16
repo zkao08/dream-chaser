@@ -32,7 +32,7 @@ public class TestAIAssistant
 		//now use AIAssistant to get tasks for a goal
 		System.out.println("Using AI to get tasks for a goal");
 		LocalDate dueDate = LocalDate.of(2024, 12, 31);
-		List<Task> taskList = AIAssistant.getTasksAI("Learn to code in python", dueDate);
+		ArrayList<Task> taskList = AIAssistant.getTasksAI("Learn to code in python", dueDate);
 		
 		//verify tasks were added to goal 
 		for(Task task : taskList)

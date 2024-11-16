@@ -146,10 +146,10 @@ public class AIAssistant
 	 * @param csv : the CSV output from ChatGPT
 	 * @return a List of tasks
 	 */
-	public static List<Task> parseCSV(String csv)
+	public static ArrayList<Task> parseCSV(String csv)
 	{
 		//create a list to store the output
-		List<Task> tasks = new ArrayList<Task>();
+		ArrayList<Task> tasks = new ArrayList<Task>();
 		
 		//split the CSV by lines
 		String[] lines = csv.split("\n");
@@ -189,7 +189,7 @@ public class AIAssistant
 	 * @param goal : the goal to be edited by the AI
 	 * @return List<Task> : a list of tasks
 	 */
-	public static List<Task> getTasksAI(String goal, LocalDate dueDate)
+	public static ArrayList<Task> getTasksAI(String goal, LocalDate dueDate)
 	{
 		//do not process request if goal has no name or due date
 		if(goal == "" || dueDate == null)
@@ -208,7 +208,7 @@ public class AIAssistant
 				+ "Ensure task names are short, simple, and do not contain commas or special punctuation.");
 		
 		//parse the response into a list of tasks
-		List<Task> tasks = new ArrayList<Task>();
+		ArrayList<Task> tasks = new ArrayList<Task>();
 		tasks = parseCSV(response);
 		
 		return tasks;
