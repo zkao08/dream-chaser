@@ -2,6 +2,8 @@ package Frontend;
 
 import java.awt.*;
 import javax.swing.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignInScreen extends JPanel {
     private CardLayout cardLayout;
@@ -11,9 +13,18 @@ public class SignInScreen extends JPanel {
     private JTextField usernameField;
     private JPasswordField passwordField;
 
+    // Simulate a database of registered users (username -> password)
+    private Map<String, String> registeredUsers;
+
     public SignInScreen(CardLayout cardLayout, JPanel mainPanel) {
         this.cardLayout = cardLayout;
         this.mainPanel = mainPanel;
+
+        // Initialize registered users
+        registeredUsers = new HashMap<>();
+        // Add some dummy users for simulation
+        registeredUsers.put("user1", "password123");
+        registeredUsers.put("user2", "securePass");
 
         // Use GridBagLayout for better control over component placement
         setLayout(new GridBagLayout());
@@ -89,6 +100,17 @@ public class SignInScreen extends JPanel {
         // Validate input
         if (username.isEmpty() || password.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Both fields are required.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Check if the username exists and the password matches
+        if (!registeredUsers.containsKey(username)) {
+            JOptionPane.showMessageDialog(this, "Account does not exist.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (!registeredUsers.get(username).equals(password)) {
+            JOptionPane.showMessageDialog(this, "Incorrect password.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 

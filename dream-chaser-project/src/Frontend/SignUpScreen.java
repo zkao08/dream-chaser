@@ -2,6 +2,8 @@ package Frontend;
 
 import java.awt.*;
 import javax.swing.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignUpScreen extends JPanel {
     private CardLayout cardLayout;
@@ -12,10 +14,16 @@ public class SignUpScreen extends JPanel {
     private JPasswordField passwordField;
     private JPasswordField confirmPasswordField;
 
+    // Simulate a "database" to store registered users (username -> password)
+    private Map<String, String> registeredUsers;
+
     public SignUpScreen(CardLayout cardLayout, JPanel mainPanel) {
         this.cardLayout = cardLayout;
         this.mainPanel = mainPanel;
 
+        // Initialize the simulated database of users
+        registeredUsers = new HashMap<>();
+        
         // Use GridBagLayout for better control over component placement
         setLayout(new GridBagLayout());
         setBackground(Color.WHITE); // Set a clean background color
@@ -106,12 +114,22 @@ public class SignUpScreen extends JPanel {
             return;
         }
 
+        // Check if the username already exists in the "database"
+        if (registeredUsers.containsKey(username)) {
+            JOptionPane.showMessageDialog(this, "Username already exists.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Check if passwords match
         if (!password.equals(confirmPassword)) {
             JOptionPane.showMessageDialog(this, "Passwords do not match.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        // Show loading screen
+        // Store the username and password in the "database"
+        registeredUsers.put(username, password);
+
+        // Show loading screen (simulated)
         cardLayout.show(mainPanel, "Loading");
 
         // Use SwingWorker to simulate loading, then switch to Progress Report
@@ -124,8 +142,9 @@ public class SignUpScreen extends JPanel {
 
             @Override
             protected void done() {
+                // After the "sign-up" process is complete, show success message
                 JOptionPane.showMessageDialog(mainPanel, "Sign Up Successful! Welcome, " + username + "!");
-                cardLayout.show(mainPanel, "ProgressReport");
+                cardLayout.show(mainPanel, "ProgressReport"); // Switch to the next screen (e.g., ProgressReport)
             }
         };
 
