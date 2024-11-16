@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * AIAssistant class tester
  * 
  * @Author: Zachary Kao
- * @Version: 1.0
+ * @Version: 2.0
  * @Since: 11/8/2024
  * 
  * Usage:

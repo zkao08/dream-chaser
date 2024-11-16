@@ -15,7 +15,7 @@ import java.time.LocalDate;
  * with assistance in creating and managing goals.
  * 
  * @Author: Zachary Kao
- * @Version: 1.3
+ * @Version: 2.0
  * @Since: 11/8/2024
  * 
  * Usage:
