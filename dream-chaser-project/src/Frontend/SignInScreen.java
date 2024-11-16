@@ -7,30 +7,95 @@ public class SignInScreen extends JPanel {
     private CardLayout cardLayout;
     private JPanel mainPanel;
 
+    // Declare instance variables for the fields
+    private JTextField usernameField;
+    private JPasswordField passwordField;
+
     public SignInScreen(CardLayout cardLayout, JPanel mainPanel) {
         this.cardLayout = cardLayout;
         this.mainPanel = mainPanel;
 
-        setLayout(new GridLayout(4, 2));
-        add(new JLabel("Username:"));
-        add(new JTextField());
-        add(new JLabel("Password:"));
-        add(new JPasswordField());
-        
-        JButton signInButton = new JButton("Sign In");
-        signInButton.addActionListener(e -> handleSignIn());
-        add(signInButton);
+        // Use GridBagLayout for better control over component placement
+        setLayout(new GridBagLayout());
+        setBackground(Color.WHITE); // Set a clean background color
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10); // Add spacing between components
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        JButton signUpButton = new JButton("Sign Up");
+        JLabel titleLabel = new JLabel("Sign In");
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        add(titleLabel, gbc);
+
+        gbc.gridwidth = 1; // Reset grid width
+
+        JLabel usernameLabel = new JLabel("Username:");
+        usernameLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        add(usernameLabel, gbc);
+
+        // Initialize the usernameField here
+        usernameField = new JTextField();
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        add(usernameField, gbc);
+
+        JLabel passwordLabel = new JLabel("Password:");
+        passwordLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        add(passwordLabel, gbc);
+
+        // Initialize the passwordField here
+        passwordField = new JPasswordField();
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        add(passwordField, gbc);
+
+        // Sign In Button
+        JButton signInButton = new JButton("Sign In");
+        signInButton.setFont(new Font("Arial", Font.BOLD, 14));
+        signInButton.setBackground(new Color(0, 123, 255));
+        signInButton.setForeground(Color.WHITE);
+        signInButton.setFocusPainted(false);
+        signInButton.addActionListener(e -> handleSignIn());
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 2;
+        add(signInButton, gbc);
+
+        // Back to Sign Up Button
+        JButton signUpButton = new JButton("Don't have an account? Sign Up");
+        signUpButton.setFont(new Font("Arial", Font.BOLD, 14));
+        signUpButton.setBackground(new Color(220, 53, 69));
+        signUpButton.setForeground(Color.WHITE);
+        signUpButton.setFocusPainted(false);
         signUpButton.addActionListener(e -> cardLayout.show(mainPanel, "SignUp"));
-        add(signUpButton);
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.gridwidth = 2;
+        add(signUpButton, gbc);
     }
 
     private void handleSignIn() {
-        // Switch to loading screen
+        // Retrieve user input
+        String username = usernameField.getText();  // This will now work because usernameField is an instance variable
+        String password = new String(passwordField.getPassword());
+
+        // Validate input
+        if (username.isEmpty() || password.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Both fields are required.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Show loading screen
         cardLayout.show(mainPanel, "Loading");
 
-        // Use SwingWorker to simulate loading, then switch to Progress Report
+        // Simulate the sign-in process (e.g., checking the username/password)
         SwingWorker<Void, Void> worker = new SwingWorker<>() {
             @Override
             protected Void doInBackground() throws InterruptedException {
@@ -40,13 +105,12 @@ public class SignInScreen extends JPanel {
 
             @Override
             protected void done() {
-                // Switch to Progress Report after loading
-                cardLayout.show(mainPanel, "ProgressReport");
+                // If sign-in is successful, show the progress report (or main app screen)
+                JOptionPane.showMessageDialog(mainPanel, "Sign In Successful! Welcome, " + username + "!");
+                cardLayout.show(mainPanel, "ProgressReport"); // Switch to the next screen (e.g., ProgressReport)
             }
         };
 
         worker.execute();
     }
 }
-
-
