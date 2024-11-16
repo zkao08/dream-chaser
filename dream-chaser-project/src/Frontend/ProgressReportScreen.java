@@ -7,6 +7,7 @@ public class ProgressReportScreen extends JPanel {
     private CardLayout cardLayout;
     private JPanel mainPanel;
 
+    //Needs to be passed string of options
     public ProgressReportScreen(CardLayout cardLayout, JPanel mainPanel) {
         this.cardLayout = cardLayout;
         this.mainPanel = mainPanel;
@@ -51,10 +52,51 @@ public class ProgressReportScreen extends JPanel {
         statisticsButton.addActionListener(e -> cardLayout.show(mainPanel, "Statistics"));
         buttonPanel.add(statisticsButton);
 
-        // "Add Time" button navigates to the Add Time screen
+        // "Add Time" dropdown menu
+        // Array of options for the dropdown menu
+        String[] goalOptions = {"Goal 1", "Goal 2", "Goal 3"};
+
+        // "Add Time" button with dropdown menu
         JButton addTimeButton = new JButton("Add Time");
-        addTimeButton.addActionListener(e -> cardLayout.show(mainPanel, "AddTime"));
+        // Create a popup menu for the dropdown options
+        JPopupMenu addTimeMenu = new JPopupMenu();
+        // Populate the menu dynamically using the array
+        for (String option : goalOptions) {
+            JMenuItem menuItem = new JMenuItem(option);
+            menuItem.addActionListener(e -> JOptionPane.showMessageDialog(this, option + " selected!"));
+            addTimeMenu.add(menuItem);
+        }
+        // Show the popup menu when the button is clicked
+        addTimeButton.addActionListener(e -> addTimeMenu.show(addTimeButton, 0, addTimeButton.getHeight()));
+        // Add the button to the button panel
         buttonPanel.add(addTimeButton);
+
+        // ---"Start Study Session" button navigates to the Study Session screen after selecting appropriate goal
+        JButton studySessionButton = new JButton("Start Study Session");
+        // Create a popup menu for the dropdown options
+        JPopupMenu studySessionMenu = new JPopupMenu();
+        // Variable to store the selected option
+        final String[] selectedOption = {null};
+
+        // Populate the menu dynamically using the array
+        for (String option : goalOptions) {
+            JMenuItem menuItem = new JMenuItem(option);
+            menuItem.addActionListener(e -> {
+                selectedOption[0] = option; // Store the selected option
+                JOptionPane.showMessageDialog(this, option + " selected! Now starting your study session.");
+
+                // Pass the selected option to the target screen
+                StudySessionScreen studySessionScreen = (StudySessionScreen) mainPanel.getComponent(1);
+                studySessionScreen.setGoal(option);
+
+                cardLayout.show(mainPanel, "Start Study Session"); // Navigate to Study Session screen
+            });
+            studySessionMenu.add(menuItem);
+        }
+        // Show the popup menu when the button is clicked
+        studySessionButton.addActionListener(e -> studySessionMenu.show(studySessionButton, 0, studySessionButton.getHeight()));
+        // Add the button to the button panel
+        buttonPanel.add(studySessionButton);
 
         // "Goal Creation" button navigates to the Goal Creation screen
         JButton goalCreationButton = new JButton("Create Goal");
@@ -64,6 +106,10 @@ public class ProgressReportScreen extends JPanel {
         add(buttonPanel, BorderLayout.SOUTH); // Add button panel at the bottom
     }
 }
+
+
+
+
 
 
 

@@ -191,6 +191,8 @@ public class AIAssistant
 	 */
 	public static ArrayList<Task> getTasksAI(String goal, LocalDate dueDate)
 	{
+		System.out.println("Due Date:" + dueDate);
+		System.out.println("Goal Name:" + goal);
 		//do not process request if goal has no name or due date
 		if(goal == "" || dueDate == null)
 		{
@@ -206,11 +208,12 @@ public class AIAssistant
 				+ "The tasks should not be numbered and the first line should be the format specification. "
 				+ "The tasks should be simple, achievable through self-study, and should not require professional instruction, public performance, or additional resources. "
 				+ "Ensure task names are short, simple, and do not contain commas or special punctuation.");
-		
+		System.out.println("Response:" + response);
 		//parse the response into a list of tasks
 		ArrayList<Task> tasks = new ArrayList<Task>();
 		tasks = parseCSV(response);
-		
+
+
 		return tasks;
 	}
 }

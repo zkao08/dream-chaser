@@ -3,7 +3,8 @@ package Backend;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ArrayList;
-
+import Backend.AIAssistant;
+import Backend.Task;
 /**
  * AIAssistant class tester
  * 
